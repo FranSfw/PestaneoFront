@@ -45,7 +45,6 @@ export function ModalInsertCita({ closeModal }: ModalInsertProps) {
           context.scale(ratio, ratio);
         }
         signaturePadRef.current = new SignaturePad(canvas);
-        canvas.style.touchAction = "none";
         console.log("SignaturePad initialized:", signaturePadRef.current);
       }
     };
