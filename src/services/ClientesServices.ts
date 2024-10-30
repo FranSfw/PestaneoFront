@@ -14,7 +14,9 @@ export interface cliente{
     dolencia_ojos:boolean,
     latex:boolean,
     fecha_ultimo_procedimiento:Date,
-    ultimo_procedimiento:string
+    ultimo_procedimiento:string,
+    firma:string,
+    foto:string
 }
 export interface clienteResponse{
   clientes: cliente[]
@@ -42,7 +44,7 @@ export interface clienteCreate{
 const API_URL = import.meta.env.VITE_API_URL as string;
 
 
-export const getAllClientes = async ():Promise<ClienteResponse> => {
+export const getAllClientes = async ():Promise<clienteResponse> => {
   try {
     const respuesta = await fetch(`${API_URL}/clientes`, {
       method: 'GET',

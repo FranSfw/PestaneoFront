@@ -11,12 +11,6 @@ function classNames(...classes: string[]) {
 }
 
 export function Header({ }: Header) {
-    const navigation = [
-        { name: 'Home', href: '#', current: true },
-        { name: 'About', href: '#', current: false },
-        { name: 'Contact', href: '#', current: false },
-    ];
-
     return (
         <Disclosure as="nav" className="bg-primaryBlack m-3 rounded-3xl">
             <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -38,21 +32,6 @@ export function Header({ }: Header) {
                                 src="src/images/Logo.png"
                                 className="h-12 w-auto"
                             />
-                        </div>
-                        <div className="hidden sm:ml-6 sm:flex sm:space-x-4 pb-1">
-                            {navigation.map((item) => (
-                                <a
-                                    key={item.name}
-                                    href={item.href}
-                                    aria-current={item.current ? 'page' : undefined}
-                                    className={classNames(
-                                        item.current ? 'bg-secondaryYellow text-[#0F172A]' : 'text-[#EEEEEE] hover:bg-[#FCDE70] focus:bg-[#FCDE70] hover:text-[#0F172A] focus:text-[#0F172A]',
-                                        'mt-1 px-3 py-2 rounded-full shadow-xs font-sans font-normal transition-all hover:duration-500 focus:duration-0 manrope-400'
-                                    )}
-                                >
-                                    {item.name}
-                                </a>
-                            ))}
                         </div>
                     </div> 
 
@@ -98,25 +77,6 @@ export function Header({ }: Header) {
                     </div>
                 </div>
             </div>
-
-            <DisclosurePanel className="sm:hidden">
-                <div className="space-y-1 px-2 pb-3 pt-2">
-                    {navigation.map((item) => (
-                        <DisclosureButton
-                            key={item.name}
-                            as="a"
-                            href={item.href}
-                            aria-current={item.current ? 'page' : undefined}
-                            className={classNames(
-                                item.current ? 'bg-[#E8B86D] text-[#0F172A]' : 'text-[#EEEEEE] hover:bg-[#FCDE70] focus:bg-[#FCDE70] hover:text-[#0F172A] focus:text-[#0F172A]',
-                                'mt-2 px-3 py-2 rounded-full shadow-xs font-sans font-normal transition-all hover:duration-500 focus:duration-0 manrope-400'
-                            )}
-                        >
-                            {item.name}
-                        </DisclosureButton>
-                    ))}
-                </div>
-            </DisclosurePanel>
         </Disclosure>
     );
 }
