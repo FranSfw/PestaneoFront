@@ -14,10 +14,10 @@ import { ModalInsert } from "../components/ModalInsert";
 import { ModalInsertCita } from "../components/ModalInsertCita";
 import { Cajita } from "../components/Cajita";
 import { MultipleItems } from "../components/Slider";
-import { ClientSlider } from "../components/ClientSlider"
+import { ClientSlider } from "../components/ClientSlider";
 import { Button2 } from "../components/Button2";
 import { useState } from "react";
-import { siguienteCita } from "../components/siguienteCita";
+import { ModalView } from "../components/ModalView";
 
 export function Dashboard() {
   const navigate = useNavigate();
@@ -33,7 +33,6 @@ export function Dashboard() {
     }
   };
 
-
   const handleClick = () => {
     navigate("/");
   };
@@ -44,12 +43,63 @@ export function Dashboard() {
         <Header />
       </div>
       <div className="h-screen w-screen manrope-500">
-        <div className="grid grid-cols-3 grid-rows-5 m-5 gap-3 h-[81vh]">
-          {/* Seccion de siguiente cita*/}
-
-
+        <div className="relative grid grid-cols-3 grid-rows-5 m-5 gap-3 h-[81vh]">
+          <div className="grid grid-cols-1 grid-rows-2 bg-white rounded-lg row-span-5 w-full h-full">
+            {/* Seccion de siguiente cita*/}
+            <div className="relative">
+              <div className="mr-5 mt-auto flex justify-end">
+                <ModalView closeModal={closeModal} />
+                {isModalOpen && (
+                  <div
+                    className="fixed bg-gray-800 bg-opacity-50 flex justify-center items-center"
+                    onClick={handleOutsideClick}
+                  >
+                    <ModalView closeModal={closeModal} />
+                  </div>
+                )}
+              </div>
+              <h2 className="ml-5 mt-4 text-2xl">Siguiente cita</h2>
+              <ul className="flex flex-col mt-8 ms-6 text-xl tracking-tight text-gray-900 font-[400]">
+                <li>
+                  <h3>Hora: </h3>
+                </li>
+                <li>
+                  <h3>Cliente: </h3>
+                </li>
+                <li>
+                  <h3>Procedimiento: </h3>
+                </li>
+              </ul>
+            </div>
+            {/* Seccion de cita anterior*/}
+            <div className="relative">
+              <div className="mr-5 mt-auto flex justify-end">
+                <ModalView closeModal={closeModal} />
+                {isModalOpen && (
+                  <div
+                    className="fixed bg-gray-800 bg-opacity-50 flex justify-center items-center"
+                    onClick={handleOutsideClick}
+                  >
+                    <ModalView closeModal={closeModal} />
+                  </div>
+                )}
+              </div>
+              <h2 className="ml-5 mt-4 text-2xl">Ultima cita</h2>
+              <ul className="flex flex-col mt-8 ms-6 text-xl tracking-tight text-gray-900 font-[400]">
+                <li>
+                  <h3>Hora: </h3>
+                </li>
+                <li>
+                  <h3>Cliente: </h3>
+                </li>
+                <li>
+                  <h3>Procedimiento: </h3>
+                </li>
+              </ul>
+            </div>
+          </div>
           {/* Sección de bienvenida y ModalInsert */}
-          <div className="flex relative flex-col justify-start bg-white rounded-lg row-span-2 col-span-2 w-full h-full">
+          <div className="flex relative flex-col justify-start bg-white rounded-lg row-span-2 col-span-2 w-full h-full pb-2">
             <span className="ml-5 mt-5 text-2xl">Bienvenida</span>
             <div className="mr-5 mt-auto flex justify-end">
               <ModalInsert closeModal={closeModal} />

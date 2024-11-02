@@ -20,9 +20,10 @@ export function Camera({ onChange }: Camera) {
         />
         <label
           htmlFor="camera"
-          className="block py-2.5 px-4 text-center text-sm rounded-lg cursor-pointer bg-tertiaryYellow text-primaryBlack hover:bg-tertiaryBlack focus:bg-tertiaryBlack hover:text-tertiaryYellow focus:text-tertiaryYellow transition-all hover:duration-500 focus:duration-0"
+          className="block py-2.5 px-4 text-center rounded-lg cursor-pointer bg-tertiaryYellow text-primaryBlack hover:bg-tertiaryBlack focus:bg-tertiaryBlack hover:text-tertiaryYellow focus:text-tertiaryYellow transition-all hover:duration-500 focus:duration-0"
         >
-          <FontAwesomeIcon icon={faCamera} />
+          <FontAwesomeIcon icon={faCamera} className='text-xl' />
+          <span className='pl-2'>Tomar Foto</span>
         </label>
       </div>
     </>

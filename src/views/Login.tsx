@@ -10,26 +10,23 @@ const API_URL = import.meta.env.VITE_API_URL;
 import {
   QueryClient,
   useMutation,
-  QueryClientProvider,
+  useQueryClient
 } from "@tanstack/react-query";
 
 
-const queryClient = new QueryClient();
 export function Login() {
   return (
     // Provide the client to your App
-    <QueryClientProvider client={queryClient}>
-      <LoginForm />
-    </QueryClientProvider>
+    <LoginForm />
   );
 }
 
 export function LoginForm() {
-
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const queryClient = useQueryClient();
 
   const credentials = {
     email: email,
@@ -61,21 +58,21 @@ export function LoginForm() {
           </p>
           <div className="w-[50vh] my-3">
             <div className="flex flex-col manrope-400">
-              <Field id="Usuario" onChange={(e) => setEmail(e.target.value)}/>
+              <Field id="Usuario" onChange={(e) => setEmail(e.target.value)} />
             </div>
             <div className="flex flex-col manrope-400 my-3">
               <Field id="Contraseña" onChange={(e) => setPassword(e.target.value)} type="password" />
             </div>
             <div className="flex flex-col manrope-400 mt-6">
-            <Button
-                    id="submit"
-                    text={"Iniciar sesión"}
-                    type={"submit"}
-                    onClick={(event) => {
-                      event.preventDefault();
-                      mutation.mutate(credentials);
-                    }}
-                  />
+              <Button
+                id="submit"
+                text={"Iniciar sesión"}
+                type={"submit"}
+                onClick={(event) => {
+                  event.preventDefault();
+                  mutation.mutate(credentials);
+                }}
+              />
             </div>
           </div>
         </div>
