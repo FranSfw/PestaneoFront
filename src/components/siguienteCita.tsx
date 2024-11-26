@@ -1,10 +1,17 @@
 import { ModalView } from "./ModalView";
 import { useState } from "react";
+import { useQuery } from '@tanstack/react-query';
+import { getAllCitas } from '../services/CitasServices';
+
 
 
 export function SiguienteCita() {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const { data, error, isLoading } = useQuery({ queryKey: ['citasInfo'], queryFn: getAllCitas });
+
+    const citas = data?.citas || []; // Asegúrate de que citas sea un arreglo
+    const cita = citas.length > 0 ? citas[0] : null;
 
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
@@ -15,41 +22,68 @@ export function SiguienteCita() {
         }
     };
 
-
-    const handleClick = () => {
-        navigate("/");
+    const formatHour = (fecha: Date | string | undefined) => {
+        if (fecha === undefined) return "";
+        const date = new Date(fecha);
+        return date.toLocaleString("es-MX", {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+        });
     };
 
     return (
         <>
-            <div className="relative bg-white rounded-lg row-span-5 w-full h-full">
+            {/* Seccion de siguiente cita*/}
+            <div className="relative">
                 <div className="mr-5 mt-auto flex justify-end">
-                    <ModalView closeModal={closeModal} />
+                    <ModalView closeModal={closeModal} type="next" />
                     {isModalOpen && (
                         <div
                             className="fixed bg-gray-800 bg-opacity-50 flex justify-center items-center"
                             onClick={handleOutsideClick}
                         >
-                            <ModalView closeModal={closeModal} />
-                        </div> //este div no debeia estar en la linea de arriba?
+                            <ModalView closeModal={closeModal} type="next" />
+                        </div>
                     )}
                 </div>
-                <div className="flex justify-between">
-                    <span className="ml-5 mt-4 text-2xl">Siguiente cita</span>
+                <h2 className="ml-5 mt-4 text-2xl">Siguiente cita</h2>
+                <ul className="flex flex-col mt-8 ms-6 text-xl tracking-tight text-gray-900 font-[400]">
+                    <li>
+                        <h3><span className="font-semibold mr-1">Hora:</span> {formatHour(cita?.fecha)}</h3>
+                    </li>
+                    <li>
+                        <h3><span className="font-semibold mr-1">Cliente:</span> {cita?.cliente_nombre} {cita?.cliente_apellido}</h3>
+                    </li>
+                    <li>
+                        <h3><span className="font-semibold mr-1">Procedimiento:</span> {cita?.tipo_procedimiento} </h3>
+                    </li>
+                </ul>
+            </div>
+
+            {/* Seccion de cita anterior*/}
+            <div className="relative">
+                <div className="mr-5 mt-auto flex justify-end">
+                    <ModalView closeModal={closeModal} type="last" />
+                    {isModalOpen && (
+                        <div
+                            className="fixed bg-gray-800 bg-opacity-50 flex justify-center items-center"
+                            onClick={handleOutsideClick}
+                        >
+                            <ModalView closeModal={closeModal} type="last" />
+                        </div>
+                    )}
                 </div>
-                <div className="flex flex-col mt-8 ms-6">
-                    <p className="mb-2 text-xl tracking-tight text-gray-900 ">
-                        <span className="font-[400]">Hora: </span>
-                    </p>
-                    <p className="mb-2 text-xl tracking-tight text-gray-900">
-                        <span className="font-[400]">Cliente: </span>
-                    </p>
-                    <p className="mb-2 text-xl tracking-tight text-gray-900">
-                        <span className="font-[400]">Procedimiento: </span>
-                    </p>
-                </div>
-                <div></div>
-            </div>{""}
+                <h2 className="ml-5 mt-4 text-2xl">Ultima cita</h2>
+                <ul className="flex flex-col mt-8 ms-6 text-xl tracking-tight text-gray-900 font-[400]">
+                    <li>
+                        <h3>Hora: </h3>
+                    </li>
+                    <li>
+                        <h3>Procedimiento: </h3>
+                    </li>
+                </ul>
+            </div>
         </>
     );
 }

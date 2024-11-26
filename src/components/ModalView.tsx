@@ -1,40 +1,99 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { IconButton } from "../components/IconButton";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { Fields2 } from "../components/Fields2";
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { getAllCitas } from '../services/CitasServices';
+import { getAllClientes } from '../services/ClientesServices';
+import { lastCita } from "../services/CitasServices";
 
 interface ModalInsertProps {
     closeModal: () => void;
+    type: "next" | "last";
 }
 
-export function ModalView({ closeModal }: ModalInsertProps) {
+interface Cita {
+    fecha: string;
+    cliente_id: string;
+    [key: string]: any; // Otras propiedades
+}
+
+export function ModalView({ closeModal, type }: ModalInsertProps) {
     const [showModal, setShowModal] = useState(false);
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
-    const [address, setAddress] = useState("");
-    const [phone, setPhone] = useState("");
-    const [email, setEmail] = useState("");
-    const [birth, setBirth] = useState("");
+    const { data } = useQuery({ queryKey: ['citasInfo'], queryFn: getAllCitas });
+    const mutation = useMutation({ mutationFn: lastCita });
 
-    const handleClick = () => {
-        setShowModal(true);
+    const citas = data?.citas || [];
+
+
+    const handleClick = () => setShowModal(true);
+
+    const formatFecha = (fecha: Date | string | undefined) => {
+        if (fecha === undefined) return "";
+        const date = new Date(fecha);
+        return date.toLocaleString("es-MX", {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+        });
     };
 
-    const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
-        if (e.target === e.currentTarget) {
-            setShowModal(false);
+    let cita;
+    let clienteId = citas[0]?.cliente_id;
+
+
+
+
+
+    // Manejo de la mutación
+    if (mutation.isLoading) {
+        console.log("Cargando la última cita...");
+    }
+
+    if (mutation.error) {
+        console.error("Ocurrió un error al cargar la última cita", mutation.error);
+    }
+
+
+
+
+
+
+    //Next es para la siguiente cita
+    if (type === "next") {
+        cita = citas[0];
+    }
+
+    //last es para la ultima cita del cliente cita_id cliente_id
+    if (type === "last") {
+        useEffect(() => {
+            if (clienteId) {
+                mutation.mutate(clienteId);
+            }
+        }, [clienteId]);
+
+        if (mutation.data === undefined) {
+            return null;
+            console.log("No hay citas");
+        } else {
+            cita = mutation.data;
+            console.log(mutation.data);
         }
-    };
+    }
 
+    // Selecciona la primera cita para mostrar
     return (
         <>
             <IconButton
                 id="insert"
                 icon={faEye}
                 onClick={handleClick}
-                text="Ver Cita"
+                text={`Ver ${type === "next" ? "" : ""} cita`}
             />
-            {showModal ? (
+            {showModal && cita ? (
                 <>
                     <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
                         <div className="relative w-auto my-6 mx-auto max-w-3xl">
@@ -59,53 +118,53 @@ export function ModalView({ closeModal }: ModalInsertProps) {
                                     <div className="flex flex-col md:flex-row md:items-center md:gap-6">
                                         <div className="flex justify-center items-center">
                                             <img
-                                                src="src/images/BigASSnGAa1.png"
+                                                src={cita.foto || "src/images/gaton.jpeg"}
                                                 alt="Foto de perfil"
-                                                className="w-24 h-24 rounded-full object-cover"
+                                                className="w-64 h-24 rounded-full object-cover mx-auto"
                                             />
                                         </div>
 
                                         <Fields2
                                             label="Cliente"
-                                            value="Juan Luis Lagunas Rosales"
+                                            value={`${cita.cliente_nombre} ${cita.cliente_apellido}`}
                                         />
 
-                                        <Fields2 label="Fecha de la Cita" value="2021-08-12" />
+                                        <Fields2 label="Fecha de la Cita" value={formatFecha(cita.fecha)} />
                                     </div>
 
                                     <div className="flex justify-center items-center pt-4">
                                         <Fields2
                                             label="Procedimiento"
-                                            value="Extensiones de Pestañas"
+                                            value={cita.tipo_procedimiento}
                                         />
                                     </div>
 
                                     <div className="grid md:grid-cols-3 md:gap-12 justify-center items-center">
                                         <Fields2
                                             label="Estilo de Mapping"
-                                            value="Clásico"
+                                            value={cita.mapping_estilo}
                                         />
                                         <Fields2
                                             label="Tamaño de Mapping"
-                                            value="Mediano"
+                                            value={cita.tamaño}
                                         />
                                     </div>
 
                                     <div className="grid md:grid-cols-3 md:gap-12 justify-center items-center">
                                         <Fields2
                                             label="Curvatura"
-                                            value="C"
+                                            value={cita.curvatura}
                                         />
                                         <Fields2
                                             label="Espesura"
-                                            value="0.15"
+                                            value={cita.espessura}
                                         />
                                     </div>
 
                                     <div className="flex justify-center items-center pt-4">
                                         <Fields2
                                             label="Notas"
-                                            value="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididun, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+                                            value={cita.notas}
                                         />
                                     </div>
                                 </div>
@@ -129,3 +188,5 @@ export function ModalView({ closeModal }: ModalInsertProps) {
         </>
     );
 }
+
+

@@ -3,8 +3,9 @@ import { createRoot } from 'react-dom/client'
 import '../index.css'
 import { Login } from './Login.tsx'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Dashboard from './Dashboard.tsx'
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import Dashboard from './Dashboard.tsx'
+//import { Citas } from './Citas.tsx'
 
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
@@ -18,8 +19,9 @@ const router = createBrowserRouter([
     element: <Dashboard />,
   },
   {
-
-  }
+    path: "/citas",
+    element: <Dashboard />
+  },
 
 ]);
 

@@ -6,11 +6,14 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { Fields } from "../components/Fields";
 import { RadioButton } from "../components/RadioButton";
 import { Camera } from "../components/Camera";
-import { ComboBox } from "../components/ComboBox";
 import { useState, useEffect } from "react";
+import { ComboBox } from "../components/ComboBox";
+import { FilteredHoursDropdown } from "../components/FilteredHoursDropdown"
+import { ComboBoxEmployees } from "../components/ComboBoxEmployees";
 import { useDebounce } from "@uidotdev/usehooks";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { getClienteByTel } from "../services/ClientesServices";
+import { getAllempleados } from "../services/EmpleadosServices";
 
 interface ModalInsertProps {
   closeModal: () => void;
@@ -24,13 +27,20 @@ export function ModalInsertCita({ closeModal }: ModalInsertProps) {
   const [lastName, setLastName] = useState("");
   const [phone, setPhone] = useState("");
   const [date, setDate] = useState("");
+  const [hour, setHour] = useState("");
   const [procedimiento, setProcedimiento] = useState("");
+  const [empleado, setEmpleado] = useState("");
   const [num_dias, setNum_dias] = useState("");
   const [notas, setNotas] = useState("");
   const [mappingStyle, setMappingStyle] = useState("");
   const [tamaño, setTamaño] = useState("");
   const [curvatura, setCurvatura] = useState("");
-  const [espessura, setEspessura] = useState("");
+  const [espesura, setEspesura] = useState("");
+
+  const empleadoResult = useQuery({
+    queryKey: ["empleado"],
+    queryFn: getAllempleados,
+  });
 
   const handleCloseModal = () => {
     setShowModal(false);
@@ -39,13 +49,14 @@ export function ModalInsertCita({ closeModal }: ModalInsertProps) {
     setLastName("");
     setPhone("");
     setDate("");
+    setHour("");
     setProcedimiento("");
     setNum_dias("");
     setNotas("");
     setMappingStyle("");
     setTamaño("");
     setCurvatura("");
-    setEspessura("");
+    setEspesura("");
   };
 
   const debouncedPhone = useDebounce(phone, 500);
@@ -56,6 +67,9 @@ export function ModalInsertCita({ closeModal }: ModalInsertProps) {
       queryClient.invalidateQueries({ queryKey: ["citasInfo"] });
     },
   });
+
+
+
 
   useEffect(() => {
     if (debouncedPhone) {
@@ -118,7 +132,7 @@ export function ModalInsertCita({ closeModal }: ModalInsertProps) {
                         onChange={(e) => setPhone(e.target.value)}
                       />
                     </div>
-                    <div className="grid md:gap-6">
+                    <div className="grid md:grid-cols-2 md:gap-6">
                       <Fields
                         id="Fecha"
                         name="Fecha"
@@ -127,18 +141,22 @@ export function ModalInsertCita({ closeModal }: ModalInsertProps) {
                         placeholder="Fecha de la cita"
                         onChange={(e) => setDate(e.target.value)}
                       />
+                      <FilteredHoursDropdown
+                        id="Hora"
+                        date={date}
+                        onChange={(e) => setHour(e.target.value)}
+                      />
                     </div>
                     <div className="grid md:gap-6">
-                      <ComboBox
+                      <ComboBoxEmployees
                         id="encargado"
                         name="encargado"
                         text="Seleccione al encargado"
                         placeholder=" "
-                        options={[
-                          // TO- DO JALAR EMPLEADOS DE BD
-                          { value: "primera_vez", label: "Primera Vez" },
-                        ]}
-                        onChange={(e) => setProcedimiento(e.target.value)}
+                        options={empleadoResult.data?.empleados}
+                        onChange={(e) => setEmpleado(e.target.value)}
+                        className={empleadoResult.isSuccess ? "" : "disabled"}
+
                       />
                     </div>
                     <div className="relative grid  w-full overflow-wrap">
@@ -195,11 +213,11 @@ export function ModalInsertCita({ closeModal }: ModalInsertProps) {
                           onChange={(e) => setMappingStyle(e.target.value)}
                         />
                         <Fields
-                          id="espessura"
-                          name="espessura"
+                          id="espesura"
+                          name="espesura"
                           type="text"
-                          text="Espessura"
-                          placeholder="Seleccione la espessura"
+                          text="Espesura"
+                          placeholder="Seleccione la espesura"
                           onChange={(e) => setTamaño(e.target.value)}
                         />
                       </div>

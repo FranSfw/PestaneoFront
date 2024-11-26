@@ -5,14 +5,32 @@
 //       <Cajita datos={info} />
 //   )
 // }
+
 //TODO:Cambiar los datos de la interfaz por los datos que se obtienen del servicio
 interface datosCaja {
   cliente_nombre: string;
   cliente_apellido: string;
-  hora: string;
-  proceso: string;
-  foto: string;
+  fecha: string;
+  tipo_procedimiento: string;
+
 }
+const formatDay = (fecha: Date | string | undefined) => {
+  if (fecha === undefined) return "";
+  const date = new Date(fecha);
+  return date.toLocaleString("es-MX", {
+    month: 'long',
+    day: 'numeric',
+  });
+};
+const formatHour = (fecha: Date | string | undefined) => {
+  if (fecha === undefined) return "";
+  const date = new Date(fecha);
+  return date.toLocaleString("es-MX", {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+  });
+};
 
 interface Props {
   datos: datosCaja; // Definimos que las props tendrán un objeto `datos` con la estructura de `datosCaja`
@@ -20,7 +38,7 @@ interface Props {
 
 export const Cajita: React.FC<Props> = ({ datos }) => {
 
-  const { cliente_nombre, cliente_apellido, hora, proceso, foto } = datos; // Extraemos las propiedades del objeto `datos`
+  const { cliente_nombre, cliente_apellido, fecha, tipo_procedimiento } = datos; // Extraemos las propiedades del objeto `datos`
 
   return (
 
@@ -29,12 +47,15 @@ export const Cajita: React.FC<Props> = ({ datos }) => {
         {cliente_nombre} {cliente_apellido}
       </h2>
       <p className="mb-2 text-sm tracking-tight text-gray-900 dark:text-white">
-        <span className=" font-[800]">Hora: </span>{hora}
+        <span className=" font-[800]">Dia: </span>{formatDay(fecha)}
       </p>
       <p className="mb-2 text-sm tracking-tight text-gray-900 dark:text-white">
-        <span className='font-[800]'>Proceso: </span>{proceso}
+        <span className=" font-[800]">Hora: </span>{formatHour(fecha)}
       </p>
-      <img className="w-[90%] h-[90%]" src={foto} alt={`Foto de ${cliente_nombre}`} />
+      <p className="mb-2 text-sm tracking-tight text-gray-900 dark:text-white">
+        <span className='font-[800]'>Proceso: </span> {tipo_procedimiento}
+      </p>
+      {/* <img className="w-[90%] h-[90%]" src={foto} alt={`Foto de ${cliente_nombre}`} />*/}
     </div>
   );
 };
