@@ -30,7 +30,7 @@ export interface TableSearchProps {
 export function TablaCitas({ searchInput }: TableSearchProps) {
   const queryClient = useQueryClient();
   const { isLoading, isError, data, error } = useQuery({
-    queryKey: ["appointmentsInfo"],
+    queryKey: ["citasInfo"],
     queryFn: getAllCitas,
   });
   const [showModal, setShowModal] = useState(false);

@@ -3,6 +3,7 @@ import { TablaCitas } from "../components/TableAppointments";
 import { ModalInsertCita } from "../components/ModalInsertCita";
 import { useState } from "react";
 import { RefreshButton } from "../components/refreshButton";
+import { Header } from "../components/Header";
 
 export function Citas() {
   const [search, setSearch] = useState("");
@@ -16,27 +17,38 @@ export function Citas() {
 
   return (
     <>
-      <div className="p-10 m-auto h-min  ">
-        <div className="pb-20 text-center">
-          <span className="text-4xl font-semibold text-black ">Citas</span>
-
-          <div className="flex flex-col md:flex-row  items-center space-y-4 md:space-y-0 mb-6 w-full">
-            <Search
-             // onSearch={handleSearch}
-             // onChange={(e) => setSearch(e.target.value)}
-              className="hidden sm:flex mr-5"
-             // value={search}
-            />
-            <RefreshButton
-              queryK={["appointmentsInfo"]}
-              onClearSearch={handleClearSearch}
-            />
-
-            <div className=" w-full flex justify-end">
-              <ModalInsertCita   />
+    <div className="">
+        <Header />
+      </div>
+      <div className="h-screen w-screen manrope-500">
+        <div className="relative grid grid-cols-3 grid-rows-5 m-5 gap-3 h-[81vh]">
+          <div className="grid grid-cols-1 grid-rows-2 bg-white rounded-lg row-span-5 w-full h-full">
+            
+          </div>
+          {/* Sección de bienvenida y ModalInsert */}
+          <div className="flex relative flex-col justify-start bg-white rounded-lg row-span-2 col-span-2 w-full h-full pb-2">
+            <span className="ml-5 mt-5 text-2xl">Ultimos Clientes Agregados</span>
+            <div className="mr-5 mt-auto flex justify-end">
+              
+            </div>
+            {/* aca va lo otro */}
+            <div className="mx-2">
             </div>
           </div>
-          <TablaCitas searchInput={search} />
+
+          {/* Sección de próximas citas */}
+          <div className="bg-white rounded-lg col-span-2 row-span-3 w-full h-full flex flex-col justify-around">
+            <div className="flex relative justify-between">
+              
+              <h1 className="text-2xl m-3">Próximas Citas</h1>
+              {/* <div className="w-[18vh] bg-primaryBlack text-yellow-50 m-3 p-2 rounded-xl text-lg">
+                Ver todas las citas
+              </div> */}
+              <div></div>
+            </div>
+            <div className="mt-2 mx-2">
+            </div>
+          </div>
         </div>
       </div>
     </>
