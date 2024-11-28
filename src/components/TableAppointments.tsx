@@ -144,7 +144,7 @@ export function TablaCitas({ searchInput }: TableSearchProps) {
                     paddingTop: "1.5rem",
                   }}
                 >
-                  {appointment.fecha}
+                  {/* {appointment.fecha} */} papu
                 </TableCell>
                 <TableCell
                   sx={{
@@ -154,7 +154,7 @@ export function TablaCitas({ searchInput }: TableSearchProps) {
                     paddingTop: "1.5rem",
                   }}
                 >
-                  {appointment.hour}
+                  {/* {appointment.hour} */}pro
                 </TableCell>
                 <TableCell
                   sx={{
