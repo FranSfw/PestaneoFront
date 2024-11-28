@@ -16,7 +16,7 @@ import { getClienteByTel } from "../services/ClientesServices";
 import { getAllempleados } from "../services/EmpleadosServices";
 
 interface ModalInsertProps {
-  closeModal: () => void;
+  closeModal?: () => void;
 }
 
 export function ModalInsertCita({ closeModal }: ModalInsertProps) {

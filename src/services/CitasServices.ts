@@ -1,3 +1,5 @@
+import { HiOutlineRadio } from "react-icons/hi2";
+
 export interface Cita {
   //cliente, fecha, encargado, procedimiento, notas, mapping_estilo, tamaño, curvatura, espessura
   citas_id?: number;
@@ -22,6 +24,8 @@ export interface Cita {
 export interface CitaResponse {
   citas: Cita[];
 }
+
+
 
 export interface CitasCreate {
   cliente: number;
