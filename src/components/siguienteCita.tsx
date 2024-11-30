@@ -1,4 +1,4 @@
-import { ModalView } from "./ModalView";
+import { ModalView } from "../components/ModalView";
 import { useState } from "react";
 import { useQuery } from '@tanstack/react-query';
 import { getAllCitas } from '../services/CitasServices';

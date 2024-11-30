@@ -34,7 +34,6 @@ export function MultipleItems() {
 
             <Slider {...settings}>
 
-
                 {data.citas.map((citas, index) => (
                     <Cajita key={index} datos={citas} />
                 ))}
