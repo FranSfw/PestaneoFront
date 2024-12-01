@@ -29,7 +29,7 @@ export function Citas() {
             <div className="mr-5 mt-auto flex justify-end">
               <ModalInsertCita />
             </div>
-            <div className="">
+            <div className="w-[95%] m-auto overflow-hidden mt-8">
               <TablaCitas searchInput={search} />
 
             </div>

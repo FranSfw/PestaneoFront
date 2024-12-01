@@ -121,7 +121,7 @@ export function TablaCitas({ searchInput }: TableSearchProps) {
               <TableCell sx={{fontSize: "1.4rem",fontWeight: "bold",color: "text.primary", width: "10%", }} align="justify" >
                 Encargado
               </TableCell>
-              <TableCell sx={{fontSize: "1.4rem", fontWeight: "bold", color: "text.primary", width: "10%",}} align="justify">
+              <TableCell sx={{fontSize: "1.4rem", fontWeight: "bold", color: "text.primary", width: "10%",}} align="left">
                 Tipo de Procedimiento
               </TableCell>
               <TableCell sx={{ fontSize: "1.4rem", fontWeight: "bold", color: "text.primary", width: "10%", }}align="center">
