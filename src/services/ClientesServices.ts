@@ -38,6 +38,8 @@ export interface clienteCreate {
   latex: boolean;
   fecha_ultimo_procedimiento: Date;
   ultimo_procedimiento: string;
+  firma: string;
+  foto: string;
 }
 
 const API_URL = import.meta.env.VITE_API_URL as string;

@@ -2,10 +2,9 @@ import React from "react";
 
 interface Fields2Props {
   label: string;
-  value: string;
+  value: string | boolean;
   className?: string;
 }
-
 
 export function Fields2({ label, value }: Fields2Props) {
   return (

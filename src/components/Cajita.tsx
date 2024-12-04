@@ -30,25 +30,6 @@ interface Props {
 export const Cajita: React.FC<Props> = ({ datos }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const customStyles = {
-    content: {
-      top: "50%",
-      left: "50%",
-      right: "auto",
-      bottom: "auto",
-      marginRight: "-50%",
-      transform: "translate(-50%, -50%)",
-      maxWidth: "600px",
-      width: "90%",
-      borderRadius: "10px",
-      padding: "20px",
-      backgroundColor: "#f8f8f8",
-    },
-    overlay: {
-      backgroundColor: "rgba(0, 0, 0, 0.5)",
-    },
-  };
-
   const formatDay = (fecha: Date | string | undefined) => {
     if (fecha === undefined) return "";
     const date = new Date(fecha);
@@ -87,7 +68,7 @@ export const Cajita: React.FC<Props> = ({ datos }) => {
     curvatura,
     citas_id,
     cliente_id,
-    foto
+    foto,
   } = datos;
 
   return (
@@ -121,84 +102,87 @@ export const Cajita: React.FC<Props> = ({ datos }) => {
           aria-labelledby="Detalles de la Cita"
         >
           <>
-          <div className=" justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
-            <div className="relative w-auto my-6 mx-auto max-w-3xl">
-              {/* Content */}
-              <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full max-h-[85vh] bg-white outline-none focus:outline-none ">
-                {/* Header */}
-                <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
-                  <h3 className="text-3xl justify-center font-semibold">
-                    Detalles de la cita 
-                  </h3>
-                  <button
-                    className="p-1 ml-auto bg-transparent border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
-                    onClick={() => closeModal()}
-                  >
-                    <button className="bg-transparent text-black h-6 w-6 text-2xl block outline-none focus:outline-none" onClick={() => closeModal()}>  
-                      ×
+            <div className=" justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
+              <div className="relative w-auto my-6 mx-auto max-w-3xl">
+                {/* Content */}
+                <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full max-h-[85vh] bg-white outline-none focus:outline-none ">
+                  {/* Header */}
+                  <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
+                    <h3 className="text-3xl justify-center font-semibold">
+                      Detalles de la cita
+                    </h3>
+                    <button
+                      className="p-1 ml-auto bg-transparent border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+                      onClick={() => closeModal()}
+                    >
+                      <button
+                        className="bg-transparent text-black h-6 w-6 text-2xl block outline-none focus:outline-none"
+                        onClick={() => closeModal()}
+                      >
+                        ×
+                      </button>
                     </button>
-                  </button>
-                </div>
-                {/* Body */}
-                <div className="relative p-6 flex-auto ">
-                  <div className="flex flex-col md:flex-row md:items-center md:gap-6">
-                    <div className="flex justify-center items-center">
-                    <img
-                        src={foto || "src/images/gaton.jpeg"}
-                        alt="Foto de perfil"
-                        className="w-[24rem] h-24 rounded-full object-cover mx-auto"
+                  </div>
+                  {/* Body */}
+                  <div className="relative p-6 flex-auto ">
+                    <div className="flex flex-col md:flex-row md:items-center md:gap-6">
+                      <div className="flex justify-center items-center">
+                        <img
+                          src={foto || "src/images/gaton.jpeg"}
+                          alt="Foto de perfil"
+                          className="w-[24rem] h-24 rounded-full object-cover mx-auto"
+                        />
+                      </div>
+
+                      <Fields2
+                        label="Cliente"
+                        value={`${cliente_nombre} ${cliente_apellido}`}
+                      />
+
+                      <Fields2 label="Fecha " value={formatDay(fecha)} />
+
+                      <Fields2 label="Hora" value={formatHour(fecha)} />
+                    </div>
+
+                    <div className="flex justify-center items-center pt-4">
+                      <Fields2
+                        label="Procedimiento"
+                        value={tipo_procedimiento}
                       />
                     </div>
 
-                    <Fields2
-                      label="Cliente"
-                      value={`${cliente_nombre} ${cliente_apellido}`}
-                    />
+                    <div className="grid md:grid-cols-3 md:gap-12 justify-center items-center">
+                      <Fields2
+                        label="Estilo de Mapping"
+                        value={mapping_estilo}
+                      />
+                      <Fields2 label="Tamaño de Mapping" value={tamaño} />
+                    </div>
 
-                    <Fields2
-                      label="Fecha "
-                      value={formatDay(fecha)}
-                    />
+                    <div className="grid md:grid-cols-3 md:gap-12 justify-center items-center">
+                      <Fields2 label="Curvatura" value={curvatura} />
+                      <Fields2 label="Espesura" value={espessura} />
+                    </div>
 
-                    <Fields2
-                      label="Hora"
-                      value={formatHour(fecha)}
-                    />
+                    <div className="flex justify-center items-center pt-4">
+                      <Fields2 label="Notas" value={notas} />
+                    </div>
                   </div>
 
-                  <div className="flex justify-center items-center pt-4">
-                    <Fields2 label="Procedimiento" value={tipo_procedimiento} />
+                  {/* Footer */}
+                  <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
+                    <button
+                      className="background-transparent text-red-500 hover:bg-red-500 hover:text-white font-bold uppercase px-6 py-3 text-sm rounded transition-all"
+                      type="button"
+                      onClick={() => closeModal()}
+                    >
+                      Cerrar
+                    </button>
                   </div>
-
-                  <div className="grid md:grid-cols-3 md:gap-12 justify-center items-center">
-                    <Fields2 label="Estilo de Mapping" value={mapping_estilo} />
-                    <Fields2 label="Tamaño de Mapping" value={tamaño} />
-                  </div>
-
-                  <div className="grid md:grid-cols-3 md:gap-12 justify-center items-center">
-                    <Fields2 label="Curvatura" value={curvatura} />
-                    <Fields2 label="Espesura" value={espessura} />
-                  </div>
-
-                  <div className="flex justify-center items-center pt-4">
-                    <Fields2 label="Notas" value={notas} />
-                  </div>
-                </div>
-
-                {/* Footer */}
-                <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
-                  <button
-                    className="background-transparent text-red-500 hover:bg-red-500 hover:text-white font-bold uppercase px-6 py-3 text-sm rounded transition-all"
-                    type="button"
-                    onClick={() => closeModal()}
-                  >
-                    Cerrar
-                  </button>
                 </div>
               </div>
             </div>
-          </div>
-          <div className="opacity-50 fixed inset-0 z-40 bg-black"></div>
+            <div className="opacity-50 fixed inset-0 z-40 bg-black"></div>
           </>
         </Modal>
       </div>
