@@ -125,7 +125,7 @@ const Cajita: React.FC<datosCajaClient> = ({
                     <div className="flex md:flex-row md:items-center md:gap-6">
                       <div className="flex justify-center items-center">
                         <img
-                          src={foto || "src/images/gaton.jpeg"}
+                          src={`src/assets/${foto}`}
                           alt="Foto de perfil"
                           className="w-24 h-24 rounded-full object-cover mx-auto"
                         />

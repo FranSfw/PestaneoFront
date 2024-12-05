@@ -19,13 +19,11 @@ export interface Cita {
   tamaño: string;
   curvatura: string;
   espessura: string;
-  //foto: string;
+  foto: string;
 }
 export interface CitaResponse {
   citas: Cita[];
 }
-
-
 
 export interface CitasCreate {
   cliente: number;

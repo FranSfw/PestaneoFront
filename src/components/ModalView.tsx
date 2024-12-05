@@ -3,7 +3,7 @@ import { IconButton } from "../components/IconButton";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { Fields2 } from "../components/Fields2";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { getAllCitas } from "../services/CitasServices";
+import { Cita, getAllCitas } from "../services/CitasServices";
 import { getAllClientes } from "../services/ClientesServices";
 import { lastCita } from "../services/CitasServices";
 
@@ -13,45 +13,45 @@ interface ModalInsertProps {
   type: "next" | "last" | string;
 }
 
-interface Cita {
-  citas_id?: number;
-  cliente_id: number;
-  cliente_nombre: string;
-  cliente_apellido: string;
-  telefono: string;
-  fecha: Date;
-  hour: Date;
-  encargado_id: string;
-  encargado_nombre: string;
-  encargado_apellido: string;
-  tipo_procedimiento: string;
-  num_dias?: number;
-  notas: string;
-  mapping_estilo: string;
-  tamaño: string;
-  curvatura: string;
-  espessura: string;
-}
+// interface Cita {
+//   citas_id?: number;
+//   cliente_id: number;
+//   cliente_nombre: string;
+//   cliente_apellido: string;
+//   telefono: string;
+//   fecha: Date;
+//   hour: Date;
+//   encargado_id: string;
+//   encargado_nombre: string;
+//   encargado_apellido: string;
+//   tipo_procedimiento: string;
+//   num_dias?: number;
+//   notas: string;
+//   mapping_estilo: string;
+//   tamaño: string;
+//   curvatura: string;
+//   espessura: string;
+// }
 
-interface citas {
-  citas_id?: number;
-  cliente_id: number;
-  cliente_nombre: string;
-  cliente_apellido: string;
-  telefono: string;
-  fecha: Date;
-  hour: Date;
-  encargado_id: string;
-  encargado_nombre: string;
-  encargado_apellido: string;
-  tipo_procedimiento: string;
-  num_dias?: number;
-  notas: string;
-  mapping_estilo: string;
-  tamaño: string;
-  curvatura: string;
-  espessura: string;
-}
+// interface citas {
+//   citas_id?: number;
+//   cliente_id: number;
+//   cliente_nombre: string;
+//   cliente_apellido: string;
+//   telefono: string;
+//   fecha: Date;
+//   hour: Date;
+//   encargado_id: string;
+//   encargado_nombre: string;
+//   encargado_apellido: string;
+//   tipo_procedimiento: string;
+//   num_dias?: number;
+//   notas: string;
+//   mapping_estilo: string;
+//   tamaño: string;
+//   curvatura: string;
+//   espessura: string;
+// }
 export function ModalView({ closeModal, type }: ModalInsertProps) {
   const [showModal, setShowModal] = useState(
     type !== "next" && type !== "last"
@@ -88,15 +88,13 @@ export function ModalView({ closeModal, type }: ModalInsertProps) {
   // Lógica para determinar la cita mostrada
   if (type === "next") {
     cita = citas[0];
-
   } else if (type === "last") {
     cita = mutation.data;
-    
   } else {
     Cliente_Id = Number(type);
     console.log("Id del cliente del type", Cliente_Id);
     if (Cliente_Id) {
-      cita = citas.filter((cita: citas) => cita.cliente_id === Cliente_Id)[0];
+      cita = citas.filter((cita: Cita) => cita.cliente_id === Cliente_Id)[0];
     }
   }
 
@@ -138,7 +136,7 @@ export function ModalView({ closeModal, type }: ModalInsertProps) {
                   <div className="flex flex-col md:flex-row md:items-center md:gap-6">
                     <div className="flex justify-center items-center">
                       <img
-                        src={cita.foto || "src/images/gaton.jpeg"}
+                        src={`src/assets/${cita.foto}`}
                         alt="Foto de perfil"
                         className="w-64 h-24 rounded-full object-cover mx-auto"
                       />
