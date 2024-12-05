@@ -74,9 +74,14 @@ export function ModalView({ closeModal, type }: ModalInsertProps) {
   };
 
   let cita;
-  let Cliente_Id = 0;
+  let clienteid = citas[0]?.cliente_id;
 
-  // Manejo de la mutación
+  useEffect(() => {
+    if (clienteid) {
+      mutation.mutate(clienteid);
+    }
+  }, [clienteid]);
+
   if (mutation.isLoading) {
     console.log("Cargando la última cita...");
   }
@@ -85,16 +90,15 @@ export function ModalView({ closeModal, type }: ModalInsertProps) {
     console.error("Ocurrió un error al cargar la última cita", mutation.error);
   }
 
-  // Lógica para determinar la cita mostrada
   if (type === "next") {
     cita = citas[0];
-  } else if (type === "last") {
-    cita = mutation.data;
-  } else {
-    Cliente_Id = Number(type);
-    console.log("Id del cliente del type", Cliente_Id);
-    if (Cliente_Id) {
-      cita = citas.filter((cita: Cita) => cita.cliente_id === Cliente_Id)[0];
+    console.log("Cita después:", cita);
+  }
+
+  if (type === "last") {
+    if (mutation.data && mutation.data.cita && mutation.data.cita.length > 0) {
+      const citaAnterior = mutation.data.cita[0];
+      cita = citaAnterior;
     }
   }
 

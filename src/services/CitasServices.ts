@@ -70,7 +70,7 @@ export async function lastCita(citas_id: number) {
     },
     body: JSON.stringify({ clienteid: citas_id }),
   });
-  return response;
+  return response.json();
 }
 
 export async function updateAppointment(update: Cita) {
