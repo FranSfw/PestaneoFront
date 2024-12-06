@@ -11,48 +11,10 @@ interface ModalInsertProps {
   closeModal: () => void;
 
   type: "next" | "last" | string;
+  id: number;
 }
 
-// interface Cita {
-//   citas_id?: number;
-//   cliente_id: number;
-//   cliente_nombre: string;
-//   cliente_apellido: string;
-//   telefono: string;
-//   fecha: Date;
-//   hour: Date;
-//   encargado_id: string;
-//   encargado_nombre: string;
-//   encargado_apellido: string;
-//   tipo_procedimiento: string;
-//   num_dias?: number;
-//   notas: string;
-//   mapping_estilo: string;
-//   tamaño: string;
-//   curvatura: string;
-//   espessura: string;
-// }
-
-// interface citas {
-//   citas_id?: number;
-//   cliente_id: number;
-//   cliente_nombre: string;
-//   cliente_apellido: string;
-//   telefono: string;
-//   fecha: Date;
-//   hour: Date;
-//   encargado_id: string;
-//   encargado_nombre: string;
-//   encargado_apellido: string;
-//   tipo_procedimiento: string;
-//   num_dias?: number;
-//   notas: string;
-//   mapping_estilo: string;
-//   tamaño: string;
-//   curvatura: string;
-//   espessura: string;
-// }
-export function ModalView({ closeModal, type }: ModalInsertProps) {
+export function ModalView({ closeModal, type, id }: ModalInsertProps) {
   const [showModal, setShowModal] = useState(
     type !== "next" && type !== "last"
   );
@@ -73,11 +35,17 @@ export function ModalView({ closeModal, type }: ModalInsertProps) {
     });
   };
 
+  // id es el id del cliente
+  console.log("Tipo de cita:", type);
+
   let cita;
-  let clienteid = citas[0]?.cliente_id;
+  let clienteid = id;
+
+  console.log("Cliente id:", clienteid);
 
   useEffect(() => {
     if (clienteid) {
+      console.log("Buscando la última cita del cliente con id:", clienteid);
       mutation.mutate(clienteid);
     }
   }, [clienteid]);
@@ -91,7 +59,8 @@ export function ModalView({ closeModal, type }: ModalInsertProps) {
   }
 
   if (type === "next") {
-    cita = citas[0];
+    // buscar la cita siguiente del cliente con id
+    cita = citas.find((cita: Cita) => cita.cliente_id === id);
     console.log("Cita después:", cita);
   }
 

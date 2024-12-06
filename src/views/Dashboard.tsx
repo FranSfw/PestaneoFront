@@ -50,7 +50,9 @@ export function Dashboard() {
           </div>
           {/* Sección de bienvenida y ModalInsert */}
           <div className="flex relative flex-col justify-start bg-white rounded-lg row-span-2 col-span-2 w-full h-full pb-2">
-            <span className="ml-5 mt-5 text-2xl">Ultimos Clientes Agregados</span>
+            <span className="ml-5 mt-5 text-2xl">
+              Ultimos Clientes Agregados
+            </span>
             <div className="mr-5 mt-auto flex justify-end">
               <ModalInsert closeModal={closeModal} />
               {isModalOpen && (
