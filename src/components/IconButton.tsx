@@ -10,9 +10,11 @@ interface dashBhutton {
 }
 
 
+
+
 export function IconButton({ id, text, icon, onClick }: dashBhutton) {
     return (
-        <button id={id} className="group flex absolute top-4 right-4 px-4 bg-tertiaryYellow rounded-full h-12 items-center justify-center hover:bg-primaryBlack focus:bg-primaryBlack text-primaryBlack hover:text-tertiaryYellow focus:text-tertiaryYellow transition-all hover:duration-300 focus:duration-0" onClick={onClick}>
+        <button id={id} className="group flex absolute right-4 px-4 bg-tertiaryYellow rounded-full h-12 items-center justify-center hover:bg-primaryBlack focus:bg-primaryBlack text-primaryBlack hover:text-tertiaryYellow focus:text-tertiaryYellow transition-all hover:duration-300 focus:duration-0" onClick={onClick}>
             <div
             >
                 <FontAwesomeIcon icon={icon} className="" />

@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { IconButton } from "../components/IconButton";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { Fields2 } from "../components/Fields2";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Cita, getAllCitas } from "../services/CitasServices";
-import { getAllClientes } from "../services/ClientesServices";
 import { lastCita } from "../services/CitasServices";
 
 interface ModalInsertProps {
@@ -14,7 +13,7 @@ interface ModalInsertProps {
   id: number;
 }
 
-export function ModalView({ closeModal, type, id }: ModalInsertProps) {
+export function ModalView({ type, id }: ModalInsertProps) {
   const [showModal, setShowModal] = useState(
     type !== "next" && type !== "last"
   );

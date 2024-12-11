@@ -57,7 +57,6 @@ export function SiguienteCita() {
     citaAnterior = mutation.data.cita[0];
   }
 
-  
   if (citas.length === 0) {
     return (
       <div className="container mx-auto p-8">
@@ -69,9 +68,8 @@ export function SiguienteCita() {
   }
 
   return (
-    <div className="container mx-auto p-8">
-      {/* Sección de Siguiente Cita */}
-      <div className="mb-24">
+    <div className="grid grid-cols-2 container mx-auto p-8">
+      <div className="mb-16">
         <h2 className="text-3xl font-bold text-black mb-4">Siguiente Cita</h2>
         <ul className="space-y-3">
           <li>
@@ -87,29 +85,18 @@ export function SiguienteCita() {
             {cita?.tipo_procedimiento || "N/A"}
           </li>
         </ul>
-        <div className="mt-auto flex justify-end relative">
-          <ModalView closeModal={closeModal} type="next" id={clienteid ?? 0} />
-          {isModalOpen && (
-            <div
-              className="fixed bg-gray-800 bg-opacity-50 flex justify-center items-center"
-              onClick={handleOutsideClick}
-            >
-              <ModalView
-                closeModal={closeModal}
-                type="next"
-                id={clienteid ?? 0}
-              />
-            </div>
-          )}
-        </div>
+      </div>
+      <div className="relative">
+        <ModalView closeModal={closeModal} type="next" id={clienteid ?? 0} />
       </div>
 
       {/* Sección de Última Cita */}
-      <div>
+      <div className="relative">
         <h2 className="text-2xl font-bold text-black mb-4">
-          Última Cita del Cliente:{" "} <br />
+          Última Cita del Cliente: <br />
           <span className="font-medium text-gray-800">
-            {citaAnterior?.cliente_nombre} {citaAnterior?.cliente_apellido}
+            {citaAnterior?.cliente_nombre}{" "}
+            {citaAnterior?.cliente_apellido || "N/A"}{" "}
           </span>
         </h2>
         {citaAnterior ? (
@@ -128,21 +115,9 @@ export function SiguienteCita() {
             No hay registros de una última cita para este cliente.
           </p>
         )}
-        <div className="mt-auto flex justify-end relative">
-          <ModalView closeModal={closeModal} type="last" id={clienteid ?? 0} />
-          {isModalOpen && (
-            <div
-              className="fixed bg-gray-800 bg-opacity-50 flex justify-center items-center"
-              onClick={handleOutsideClick}
-            >
-              <ModalView
-                closeModal={closeModal}
-                type="last"
-                id={clienteid ?? 0}
-              />
-            </div>
-          )}
-        </div>
+      </div>
+      <div className="relative">
+        <ModalView closeModal={closeModal} type="next" id={clienteid ?? 0} />
       </div>
     </div>
   );

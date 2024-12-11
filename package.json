@@ -12,8 +12,12 @@
   "dependencies": {
     "@emotion/react": "^11.13.5",
     "@emotion/styled": "^11.13.5",
+<<<<<<< HEAD
     "@fortawesome/fontawesome-common-types": "^6.7.1",
     "@fortawesome/fontawesome-svg-core": "^6.6.0",
+=======
+    "@fortawesome/fontawesome-svg-core": "^6.7.1",
+>>>>>>> 5a695acfbc83c6a37cd85ec1625c5096119e3d2b
     "@fortawesome/free-solid-svg-icons": "^6.7.1",
     "@fortawesome/react-fontawesome": "^0.2.2",
     "@headlessui/react": "^2.1.10",

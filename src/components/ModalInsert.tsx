@@ -13,7 +13,10 @@ import { useState, ChangeEvent } from 'react';
 
 interface ModalInsertProps {
   closeModal: () => void;
+  className?: string;
 }
+
+
 
 export function ModalInsert({ closeModal }: ModalInsertProps) {
   const [showModal, setShowModal] = useState(false);

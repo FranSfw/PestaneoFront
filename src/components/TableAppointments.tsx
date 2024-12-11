@@ -20,12 +20,12 @@ import { faTrash, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import { ModalDeleteAppointment } from "./ModalDeleteAppointment.tsx";
 import { ModalUpdateAppointment } from "./ModalUpdateAppointment";
-import { useDebounce } from "@uidotdev/usehooks";
 import { faEye } from "@fortawesome/free-solid-svg-icons/faEye";
+import { useDebounce } from "@uidotdev/usehooks";
 
 export interface TableSearchProps {
-    searchInput: string;
-  }
+  searchInput: string;
+}
 
 export function TablaCitas({ searchInput }: TableSearchProps) {
   const queryClient = useQueryClient();
@@ -95,6 +95,26 @@ export function TablaCitas({ searchInput }: TableSearchProps) {
     setselectedAppointment(undefined);
   };
 
+  const formatDate = (fecha: Date | string | undefined) => {
+    if (!fecha) return "N/A";
+    const date = new Date(fecha);
+    return date.toLocaleString("es-MX", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
+  const formatHour = (fecha: Date | string | undefined) => {
+    if (!fecha) return "N/A";
+    const date = new Date(fecha);
+    return date.toLocaleString("es-MX", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    });
+  };
+
   return (
     <>
       <TableContainer sx={{ borderRadius: "1rem" }} component={Paper}>
@@ -108,35 +128,90 @@ export function TablaCitas({ searchInput }: TableSearchProps) {
                 },
               }}
             >
-             
-              <TableCell sx={{fontSize: "1.4rem",fontWeight: "bold",color: "text.primary",width: "10%",}}align="justify">
+              <TableCell
+                sx={{
+                  fontSize: "1.4rem",
+                  fontWeight: "bold",
+                  color: "text.primary",
+                  width: "10%",
+                }}
+                align="justify"
+              >
                 Fecha
               </TableCell>
-              <TableCell sx={{fontSize: "1.4rem",fontWeight: "bold",color: "text.primary", width: "10%",}} align="justify">
+              <TableCell
+                sx={{
+                  fontSize: "1.4rem",
+                  fontWeight: "bold",
+                  color: "text.primary",
+                  width: "10%",
+                }}
+                align="justify"
+              >
                 Hora
               </TableCell>
-              <TableCell sx={{fontSize: "1.4rem",fontWeight: "bold",color: "text.primary",width: "10%",}}align="justify">
+              <TableCell
+                sx={{
+                  fontSize: "1.4rem",
+                  fontWeight: "bold",
+                  color: "text.primary",
+                  width: "10%",
+                }}
+                align="justify"
+              >
                 Cliente
               </TableCell>
-              <TableCell sx={{fontSize: "1.4rem",fontWeight: "bold",color: "text.primary", width: "10%", }} align="justify" >
+              <TableCell
+                sx={{
+                  fontSize: "1.4rem",
+                  fontWeight: "bold",
+                  color: "text.primary",
+                  width: "10%",
+                }}
+                align="justify"
+              >
                 Encargado
               </TableCell>
-              <TableCell sx={{fontSize: "1.4rem", fontWeight: "bold", color: "text.primary", width: "10%",}} align="left">
+              <TableCell
+                sx={{
+                  fontSize: "1.4rem",
+                  fontWeight: "bold",
+                  color: "text.primary",
+                  width: "10%",
+                }}
+                align="left"
+              >
                 Tipo de Procedimiento
               </TableCell>
-              <TableCell sx={{ fontSize: "1.4rem", fontWeight: "bold", color: "text.primary", width: "10%", }}align="center">
+              <TableCell
+                sx={{
+                  fontSize: "1.4rem",
+                  fontWeight: "bold",
+                  color: "text.primary",
+                  width: "10%",
+                }}
+                align="center"
+              >
                 Notas
               </TableCell>
-              <TableCell sx={{fontSize: "1.4rem",fontWeight: "bold",color: "text.primary",width: "5%",}}align="justify"></TableCell>
+              <TableCell
+                sx={{
+                  fontSize: "1.4rem",
+                  fontWeight: "bold",
+                  color: "text.primary",
+                  width: "5%",
+                }}
+                align="justify"
+              ></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.citas.map((appointment, index) => (
+            {data.citas.map((appointment) => (
               <TableRow
                 key={appointment.citas_id}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
-               <TableCell
+                <TableCell
                   sx={{
                     fontSize: "1.1rem",
                     width: "5%",
@@ -144,7 +219,7 @@ export function TablaCitas({ searchInput }: TableSearchProps) {
                     paddingTop: "1.5rem",
                   }}
                 >
-                  {/* {appointment.fecha} */} papu
+                  {formatDate(appointment.fecha)}
                 </TableCell>
                 <TableCell
                   sx={{
@@ -154,7 +229,7 @@ export function TablaCitas({ searchInput }: TableSearchProps) {
                     paddingTop: "1.5rem",
                   }}
                 >
-                  {/* {appointment.hour} */}pro
+                  {formatHour(appointment.fecha)}
                 </TableCell>
                 <TableCell
                   sx={{
@@ -174,7 +249,8 @@ export function TablaCitas({ searchInput }: TableSearchProps) {
                     paddingTop: "1.5rem",
                   }}
                 >
-                  {appointment.encargado_nombre} {appointment.encargado_apellido}
+                  {appointment.encargado_nombre}{" "}
+                  {appointment.encargado_apellido}
                 </TableCell>
                 <TableCell
                   sx={{
@@ -221,10 +297,9 @@ export function TablaCitas({ searchInput }: TableSearchProps) {
                     >
                       <FontAwesomeIcon icon={faTrash} className="" />
                     </Button>
-
                     <Button
                       variant="contained"
-                      sx={{ bgcolor: "transparent", width: "2rem" }}
+                      sx={{ bgcolor: "green", width: "2rem" }}
                       onClick={() => handleShow(appointment)}
                     >
                       <FontAwesomeIcon icon={faEye} className="" />
