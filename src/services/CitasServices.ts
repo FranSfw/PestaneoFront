@@ -1,4 +1,3 @@
-import { HiOutlineRadio } from "react-icons/hi2";
 
 export interface Cita {
   //cliente, fecha, encargado, procedimiento, notas, mapping_estilo, tamaño, curvatura, espessura
@@ -26,8 +25,9 @@ export interface CitaResponse {
 }
 
 export interface CitasCreate {
-  cliente: number;
-  fecha: Date;
+  //cliente?: number;
+  telefono: string;
+  fecha: string;
   encargado: number;
   procedimiento: number;
   notas: string;
@@ -44,14 +44,28 @@ export async function getAllCitas() {
   const data: CitaResponse = await response.json();
   return data;
 }
+
 export async function createCita(cita: CitasCreate) {
-  const response = await fetch(`${API_URL}/citas`, {
+  console.log("papu pro: ",cita);
+  const response = await fetch(`${API_URL}/citas/create`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(cita),
+    body: JSON.stringify({
+      telefono: cita.telefono,
+      fecha: cita.fecha,
+      encargado: cita.encargado,
+      procedimiento: cita.procedimiento,
+      notas: cita.notas,
+      mapping_estilo: cita.mapping_estilo,
+      tamaño: cita.tamaño,
+      curvatura: cita.curvatura,
+      espessura: cita.espessura,
+    }),
   });
+  console.log("response: ",response.json());
+  console.log("response: ",response);
   return response;
 }
 
@@ -113,6 +127,20 @@ export async function searchAppointment(search: string) {
     },
     body: JSON.stringify({
       name: search,
+    }),
+  });
+  const data = await response.json();
+  return data;
+}
+
+export async function searchUser(search: string) {
+  const response = await fetch(`${API_URL}/clientes/phone`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      phone_number: search,
     }),
   });
   const data = await response.json();

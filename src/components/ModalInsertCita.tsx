@@ -1,11 +1,8 @@
 import React from "react";
-import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconButton } from "../components/IconButton";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { Fields } from "../components/Fields";
-import { RadioButton } from "../components/RadioButton";
-import { Camera } from "../components/Camera";
 import { useState, useEffect } from "react";
 import { ComboBox } from "../components/ComboBox";
 import { FilteredHoursDropdown } from "../components/FilteredHoursDropdown"
@@ -14,6 +11,7 @@ import { useDebounce } from "@uidotdev/usehooks";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { getClienteByTel } from "../services/ClientesServices";
 import { getAllempleados } from "../services/EmpleadosServices";
+import { CitasCreate, createCita } from "../services/CitasServices";
 
 interface ModalInsertProps {
   closeModal?: () => void;
@@ -36,6 +34,8 @@ export function ModalInsertCita({ closeModal }: ModalInsertProps) {
   const [tamaño, setTamaño] = useState("");
   const [curvatura, setCurvatura] = useState("");
   const [espesura, setEspesura] = useState("");
+  const [errorCreate, setErrorCreate] = useState("");
+  const [dialogue, setDialogue] = useState(false);
 
   const empleadoResult = useQuery({
     queryKey: ["empleado"],
@@ -59,25 +59,31 @@ export function ModalInsertCita({ closeModal }: ModalInsertProps) {
     setEspesura("");
   };
 
-  const debouncedPhone = useDebounce(phone, 500);
-  const searchMutation = useMutation({
-    mutationFn: getClienteByTel,
+  const mutation = useMutation({
+    mutationFn: createCita,
     onSuccess: () => {
       // Invalidate and refetch
-      queryClient.invalidateQueries({ queryKey: ["citasInfo"] });
+      queryClient.invalidateQueries({ queryKey: ["appointmentsInfo"] });
+      setShowModal(false);
+      setFirstName("");
+      setLastName("");
+      setPhone("");
+      setDate("");
+      setHour("");
+      setProcedimiento("");
+      setNum_dias("");
+      setNotas("");
+      setMappingStyle("");
+      setTamaño("");
+      setCurvatura("");
+      setEspesura("");
+
+    },
+    onError: (error) => {
+      setErrorCreate(error.message);
+      setDialogue(true);
     },
   });
-
-
-
-
-  useEffect(() => {
-    if (debouncedPhone) {
-      searchMutation.mutate(debouncedPhone);
-    }
-  }, [debouncedPhone]);
-  if (searchMutation.isSuccess) {
-  }
 
   const handleClick = () => {
     setShowModal(true);
@@ -89,7 +95,33 @@ export function ModalInsertCita({ closeModal }: ModalInsertProps) {
     }
   };
 
-  const saveData = () => { };
+  const handleSave = () => {
+    if (date && phone && empleado && procedimiento) {
+      console.log(newAppointment);
+      mutation.mutate(newAppointment);
+    } else {
+      alert("Por favor llene todos los campos");
+    }
+  };
+
+
+
+  const handleAddClick = () => {
+    setShowModal(true);
+  };
+
+  const newAppointment: CitasCreate = {
+    telefono: phone,
+    fecha: (date + " " + hour),
+    encargado: 1,
+    procedimiento: parseInt(procedimiento),
+    notas: notas,
+    mapping_estilo: mappingStyle,
+    tamaño: tamaño,
+    curvatura: curvatura,
+    espessura: espesura
+  };
+
 
   return (
     <>
@@ -166,9 +198,9 @@ export function ModalInsertCita({ closeModal }: ModalInsertProps) {
                         text="Seleccione el tipo de procedimiento:"
                         placeholder=" "
                         options={[
-                          { value: "primera_vez", label: "Primera Vez" },
-                          { value: "retoque", label: "Retoque" },
-                          { value: "retiro", label: "Retiro" },
+                          { value: "1", label: "Primera Vez" },
+                          { value: "2", label: "Retoque" },
+                          { value: "3", label: "Retiro" },
                         ]}
                         onChange={(e) => setProcedimiento(e.target.value)}
                       />
@@ -210,7 +242,7 @@ export function ModalInsertCita({ closeModal }: ModalInsertProps) {
                           type="text"
                           text="Curvatura"
                           placeholder="Seleccione la curvatura"
-                          onChange={(e) => setMappingStyle(e.target.value)}
+                          onChange={(e) => setCurvatura(e.target.value)}
                         />
                         <Fields
                           id="espesura"
@@ -218,7 +250,7 @@ export function ModalInsertCita({ closeModal }: ModalInsertProps) {
                           type="text"
                           text="Espesura"
                           placeholder="Seleccione la espesura"
-                          onChange={(e) => setTamaño(e.target.value)}
+                          onChange={(e) => setEspesura(e.target.value)}
                         />
                       </div>
                       <div className="grid md:gap-6">
@@ -246,7 +278,7 @@ export function ModalInsertCita({ closeModal }: ModalInsertProps) {
                   <button
                     className="bg-tertiaryYellow text-primaryBlack hover:bg-tertiaryBlack focus:bg-tertiaryBlack hover:text-tertiaryYellow focus:text-tertiaryYellow font-bold uppercase text-sm px-6 py-3 rounded mr-1 mb-1 transition-all hover:duration-500 focus:duration-0"
                     type="button"
-                    onClick={handleCloseModal}
+                    onClick={handleSave}
                   >
                     Guardar Cambios
                   </button>
