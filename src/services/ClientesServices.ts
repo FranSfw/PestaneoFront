@@ -28,7 +28,7 @@ export interface clienteCreate {
   domicilio: string;
   telefono: string;
   email: string;
-  fecha_nacimiento: Date;
+  fecha_nacimiento: string;
   medicamentos: string;
   alergias: string;
   sensibilidad_productos: string;
@@ -36,8 +36,8 @@ export interface clienteCreate {
   infeccion_ojos: boolean;
   dolencia_ojos: boolean;
   latex: boolean;
-  fecha_ultimo_procedimiento: Date;
-  ultimo_procedimiento: string;
+  fecha_ultimo_procedimiento: string;
+  ultimo_procedimiento?: string;
   firma: string;
   foto: string;
 }
@@ -96,7 +96,8 @@ export const getClienteByTel = async (
 };
 
 export async function clienteAgregar(create: clienteCreate) {
-  const response = await fetch(`${API_URL}/users`, {
+  console.log("papu pro: ", create);
+  const response = await fetch(`${API_URL}/clientes/create`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -115,10 +116,15 @@ export async function clienteAgregar(create: clienteCreate) {
       infeccion_ojos: create.infeccion_ojos,
       dolencia_ojos: create.dolencia_ojos,
       latex: create.latex,
+      foto: create.foto,
+      firma: create.firma,
       fecha_ultimo_procedimiento: create.fecha_ultimo_procedimiento,
       ultimo_procedimiento: create.ultimo_procedimiento,
+     
     }),
   });
+  console.log(response.json());
+  console.log(response);
   const responsedata = await response.json();
   return responsedata;
 }

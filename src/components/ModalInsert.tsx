@@ -10,6 +10,10 @@ import SignaturePad from "signature_pad";
 import { useRef } from "react";
 import { useEffect } from "react";
 import { useState, ChangeEvent } from 'react';
+import { clienteAgregar, clienteCreate } from "../services/ClientesServices";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { format } from 'date-fns';
+
 
 interface ModalInsertProps {
   closeModal: () => void;
@@ -20,6 +24,7 @@ interface ModalInsertProps {
 
 export function ModalInsert({ closeModal }: ModalInsertProps) {
   const [showModal, setShowModal] = useState(false);
+  const queryClient = useQueryClient();
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -38,6 +43,8 @@ export function ModalInsert({ closeModal }: ModalInsertProps) {
   const [hasEyeInfection, setHasEyeInfection] = useState(false);
   const [hasEyePain, setHasEyePain] = useState(false);
   const [hasLatex, setHasLatex] = useState(false);
+  const [errorCreate, setErrorCreate] = useState("");
+  const [dialogue, setDialogue] = useState(false);
 
   const handleCloseModal = () => {
     setShowModal(false);
@@ -109,6 +116,70 @@ export function ModalInsert({ closeModal }: ModalInsertProps) {
       { handleCloseModal }
     }
   };
+
+
+  const mutation = useMutation({
+    mutationFn: clienteAgregar,
+    onSuccess: () => {
+      // Invalidate and refetch
+      queryClient.invalidateQueries({ queryKey: ["clientesInfo"] });
+      setShowModal(false);
+      setFirstName("");
+      setLastName("");
+      setPhone("");
+      setEmail("");
+      setAddress("");
+      setBirth("");
+      setPicture("");
+      setHasMeds(false);
+      setMeds("");
+      setHasAllergies(false);
+      setAllergies("");
+      setHasSensibility(false);
+      setSensibility("");
+      setHasDermatitis(false);
+      setHasEyeInfection(false);
+      setHasEyePain(false);
+      setHasLatex(false);
+
+
+    },
+    onError: (error) => {
+      setErrorCreate(error.message);
+      setDialogue(true);
+    },
+  });
+
+  const handleSave = () => {
+    if (firstName && lastName && phone && email && address && birth && picture) {
+      console.log(newClient);
+      mutation.mutate(newClient);
+    } else {
+      alert("Por favor llene todos los campos");
+    }
+  };
+
+  const newClient: clienteCreate = {
+    nombre: firstName,
+    apellido: lastName,
+    telefono: phone,
+    email: email,
+    domicilio: address,
+    fecha_nacimiento: birth,
+    foto: picture,
+    alergias: allergies,
+    medicamentos: meds,
+    sensibilidad_productos: sensibility,
+    dermatitis: hasDermatitis,
+    infeccion_ojos: hasEyeInfection,
+    dolencia_ojos: hasEyePain,
+    latex: hasLatex,
+    firma: signaturePadRef.current?.toDataURL(),
+    fecha_ultimo_procedimiento: format(new Date(), 'yyyy-MM-dd'),
+
+    ultimo_procedimiento: "N/A",
+  };
+
 
 
 
@@ -327,7 +398,7 @@ export function ModalInsert({ closeModal }: ModalInsertProps) {
                   <button
                     className="bg-tertiaryYellow text-primaryBlack hover:bg-tertiaryBlack focus:bg-tertiaryBlack hover:text-tertiaryYellow focus:text-tertiaryYellow font-bold uppercase text-sm px-6 py-3 rounded mr-1 mb-1 transition-all hover:duration-500 focus:duration-0"
                     type="button"
-                    onClick={handleCloseModal}
+                    onClick={handleSave}
                   >
                     Guardar Cambios
                   </button>
