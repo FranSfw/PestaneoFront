@@ -121,6 +121,19 @@ const Cajita: React.FC<datosCajaClient> = ({
   const dolencia_ojosStr = dolencia_ojos ? "Sí" : "No";
   const latexStr = latex ? "Sí" : "No";
 
+  if (sensibilidad_productos === "")  {
+    sensibilidad_productos = "N/A";
+  }
+
+  if (medicamentos === "") {
+    medicamentos = "N/A";
+  }
+
+  if (alergias === "") {
+    alergias = "N/A";
+  }
+
+
   return (
     <>
       <button
@@ -262,3 +275,4 @@ const Cajita: React.FC<datosCajaClient> = ({
     </>
   );
 };
+

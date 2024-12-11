@@ -50,22 +50,15 @@ export function Dashboard() {
           </div>
           {/* Sección de bienvenida y ModalInsert */}
           <div className="flex relative flex-col justify-start bg-white rounded-lg row-span-2 col-span-2 w-full h-full pb-2">
+            <div className="relative pt-6">
+              <ModalInsert closeModal={closeModal} />
+            </div>
             <span className="ml-5 mt-5 text-2xl">
               Ultimos Clientes Agregados
             </span>
-            <div className="mr-5 mt-auto flex justify-end">
-              <ModalInsert closeModal={closeModal} />
-              {isModalOpen && (
-                <div
-                  className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center"
-                  onClick={handleOutsideClick}
-                >
-                  <ModalInsert closeModal={closeModal} />
-                </div> //este div no debeia estar en la linea de arriba?
-              )}
-            </div>
+
             {/* aca va lo otro */}
-            <div className="mx-2">
+            <div className="mx-2 pt-6">
               <ClientSlider />
             </div>
           </div>
