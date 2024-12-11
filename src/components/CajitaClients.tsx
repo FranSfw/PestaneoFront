@@ -1,11 +1,14 @@
 import { Modal } from "@mui/material";
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import { Fields2 } from "./Fields2";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCheckCircle,
   faTimesCircle,
 } from "@fortawesome/free-solid-svg-icons";
+import { getAllCitas, lastCita } from "../services/CitasServices";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { ModalView } from "../components/ModalView";
 
 interface datosCajaClient {
   nombre: string;
@@ -75,6 +78,49 @@ const Cajita: React.FC<datosCajaClient> = ({
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
+  const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {
+      closeModal();
+    }
+  };
+
+  const { data } = useQuery({
+    queryKey: ["citasInfo"],
+    queryFn: getAllCitas,
+  });
+
+  const citas = data?.citas || [];
+  const mutation = useMutation({ mutationFn: lastCita });
+
+  const cita = citas.length > 0 ? citas[0] : null;
+  let citaAnterior = null;
+  let clienteid = cita?.cliente_id;
+
+  useEffect(() => {
+    if (clienteid) {
+      mutation.mutate(clienteid);
+    }
+  }, [clienteid]);
+
+  if (mutation.data?.cita?.length > 0) {
+    citaAnterior = mutation.data.cita[0];
+  }
+
+  if (citas.length === 0) {
+    return (
+      <div className="container mx-auto p-8">
+        <h2 className="text-2xl font-bold text-gray-700 text-center">
+          No hay próximas citas registradas.
+        </h2>
+      </div>
+    );
+  }
+
+  const dermatitisStr = dermatitis ? "Sí" : "No";
+  const infeccion_ojosStr = infeccion_ojos ? "Sí" : "No";
+  const dolencia_ojosStr = dolencia_ojos ? "Sí" : "No";
+  const latexStr = latex ? "Sí" : "No";
+
   return (
     <>
       <button
@@ -97,12 +143,11 @@ const Cajita: React.FC<datosCajaClient> = ({
         aria-labelledby="Detalles del Cliente"
       >
         <div>
-          <button onClick={closeModal}>Close Modal</button>
           <>
-            <div className=" justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
+            <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
               <div className="relative w-auto my-6 mx-auto max-w-3xl">
                 {/* Content */}
-                <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full max-h-[85vh] min-w-[85vh] bg-white outline-none focus:outline-none ">
+                <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full max-h-[85vh] min-w-[85vh] bg-white outline-none focus:outline-none">
                   {/* Header */}
                   <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
                     <h3 className="text-3xl justify-center font-semibold">
@@ -112,66 +157,88 @@ const Cajita: React.FC<datosCajaClient> = ({
                       className="p-1 ml-auto bg-transparent border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
                       onClick={() => closeModal()}
                     >
-                      <button
-                        className="bg-transparent text-black h-6 w-6 text-2xl block outline-none focus:outline-none"
-                        onClick={() => closeModal()}
-                      >
-                        ×
-                      </button>
+                      ×
                     </button>
                   </div>
+
                   {/* Body */}
-                  <div className="relative p-6 flex-auto ">
-                    <div className="flex md:flex-row md:items-center md:gap-6">
+                  <div className="relative p-6 flex-auto overflow-y-auto jus">
+                    <div className="flex flex-col md:flex-row items-center justify-center gap-6">
                       <div className="flex justify-center items-center">
                         <img
                           src={`src/assets/${foto}`}
                           alt="Foto de perfil"
-                          className="w-24 h-24 rounded-full object-cover mx-auto"
+                          className="w-64 h-24 rounded-full object-cover"
                         />
-                        <div className="flex justify-center items-center pt-4 ml-5">
-                          <Fields2
-                            label="Cliente"
-                            value={`${nombre} ${apellido}`}
+                      </div>
+                      <Fields2
+                        label="Cliente"
+                        value={`${nombre} ${apellido}`}
+                      />
+                    </div>
+
+                    <div className="flex flex-row justify-center items-center pt-4 gap-6">
+                      <Fields2 label="Número de teléfono" value={telefono} />
+                      <Fields2 label="Email" value={email} />
+                    </div>
+
+                    <div className="flex flex-row justify-center items-center pt-4 gap-6">
+                      <Fields2 label="Dermatitis" value={dermatitisStr} />
+                      <Fields2
+                        label="Infeccion de ojos"
+                        value={infeccion_ojosStr}
+                      />
+                    </div>
+
+                    <div className="flex flex-row justify-center items-center pt-4 gap-6">
+                      <Fields2
+                        label="Dolencia en los ojos"
+                        value={dolencia_ojosStr}
+                      />
+                      <Fields2 label="Látex" value={latexStr} />
+                    </div>
+
+                    <div className="flex flex-row justify-center items-center pt-4 gap-6">
+                      <Fields2
+                        label="Sensibilidad a productos"
+                        value={sensibilidad_productos}
+                      />
+                      <Fields2 label="Medicamentos" value={medicamentos} />
+                    </div>
+
+                    <div className="flex flex-row justify-center items-center pt-4 gap-6">
+                      <Fields2 label="Alergias" value={alergias} />
+                    </div>
+
+                    <div className="flex flex-row justify-center items-center pt-4 gap-6">
+                      {/* Columna de "Anterior cita" */}
+                      <div className="grid grid-cols-2 items-center relative z-0 w-full">
+                        <h2 className=" text-md text-gray-600">
+                          Anterior cita
+                        </h2>
+
+                        <h2 className=" text-md text-gray-600">
+                          Siguiente cita
+                        </h2>
+
+                        <div className="mt-auto flex justify-center relative">
+                          <ModalView
+                            closeModal={closeModal}
+                            type="next"
+                            id={clienteid ?? 0}
+                          />
+                        </div>
+
+                        <div className="mt-auto flex justify-center relative">
+                          <ModalView
+                            closeModal={closeModal}
+                            type="last"
+                            id={clienteid ?? 0}
                           />
                         </div>
                       </div>
-                    </div>
 
-                    <div className="flex justify-center items-center pt-4">
-                      <Fields2 label="Numero Celular" value={telefono} />
-                      <Fields2 label="Correo Electronico" value={email} />
-                    </div>
-
-                    {/* Allergies Div*/}
-                    <div className="grid grid-cols-4 place-content-center">
-                      <Fields2
-                        className="justify-self-center	"
-                        label="Dermatitis"
-                        value={dermatitis}
-                      />
-                      <Fields2
-                        label="Infeccion en los Ojos"
-                        value={infeccion_ojos}
-                      />
-                      <Fields2
-                        label="Dolencia en los Ojos"
-                        value={dolencia_ojos}
-                      />
-                      <Fields2 label="Latex" value={latex} />
-                    </div>
-
-                    <div className="flex justify-center items-center pt-4">
-                      <Fields2
-                        label="Sensibilidad a Productos"
-                        value={sensibilidad_productos}
-                      />
-                    </div>
-                    <div className="flex justify-center items-center pt-4">
-                      <Fields2 label="Medicamentos" value={medicamentos} />
-                    </div>
-                    <div className="flex justify-center items-center pt-4">
-                      <Fields2 label="Alergias" value={alergias} />
+                      
                     </div>
                   </div>
 
