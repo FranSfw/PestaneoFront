@@ -160,7 +160,7 @@ const Cajita: React.FC<datosCajaClient> = ({
             <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
               <div className="relative w-auto my-6 mx-auto max-w-3xl">
                 {/* Content */}
-                <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full max-h-[85vh] min-w-[85vh] bg-white outline-none focus:outline-none">
+                <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full max-h-[85vh] max-w-[85vh] min-w-[85vh] bg-white outline-none focus:outline-none">
                   {/* Header */}
                   <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
                     <h3 className="text-3xl justify-center font-semibold">
@@ -175,13 +175,13 @@ const Cajita: React.FC<datosCajaClient> = ({
                   </div>
 
                   {/* Body */}
-                  <div className="relative p-6 flex-auto overflow-y-auto jus">
+                  <div className="relative p-6 flex-auto overflow-y-auto ">
                     <div className="flex flex-col md:flex-row items-center justify-center gap-6">
                       <div className="flex justify-center items-center">
                         <img
                           src={`src/assets/${foto}`}
                           alt="Foto de perfil"
-                          className="w-64 h-24 rounded-full object-cover"
+                          className="w-64 h-32 rounded-full object-contain mx-auto"
                         />
                       </div>
                       <Fields2
@@ -234,7 +234,7 @@ const Cajita: React.FC<datosCajaClient> = ({
                           Siguiente cita
                         </h2>
 
-                        <div className="mt-auto flex justify-center relative">
+                        <div className="mt-2 flex justify-center relative pr-32">
                           <ModalView
                             closeModal={closeModal}
                             type="next"
@@ -242,7 +242,7 @@ const Cajita: React.FC<datosCajaClient> = ({
                           />
                         </div>
 
-                        <div className="mt-auto flex justify-center relative">
+                        <div className="mt-2 flex justify-center relative pr-32">
                           <ModalView
                             closeModal={closeModal}
                             type="last"
@@ -250,8 +250,6 @@ const Cajita: React.FC<datosCajaClient> = ({
                           />
                         </div>
                       </div>
-
-                      
                     </div>
                   </div>
 
