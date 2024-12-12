@@ -46,6 +46,7 @@ export function TablaCitas({ searchInput }: TableSearchProps) {
       queryClient.invalidateQueries({ queryKey: ["appointmentsInfo"] });
       setShowModal(false); // Close modal after successful deletion
     },
+
   });
   const searchMutation = useMutation({
     mutationFn: searchAppointment,
@@ -80,11 +81,6 @@ export function TablaCitas({ searchInput }: TableSearchProps) {
     setShowModal(true);
   };
 
-  const handleDeleteConfirm = () => {
-    if (selectedAppointment) {
-      deleteMutation.mutate(selectedAppointment.citas_id);
-    }
-  };
 
   const handleCloseModal = () => {
     setShowModal(false);
@@ -315,7 +311,7 @@ export function TablaCitas({ searchInput }: TableSearchProps) {
         <ModalDeleteAppointment
           open={showModal}
           onClose={handleCloseModal}
-          onConfirm={handleDeleteConfirm}
+          //onConfirm={handleDeleteConfirm}
           appointment={selectedAppointment}
         />
       )}

@@ -6,34 +6,52 @@ import {
   DialogTitle,
   Button,
 } from "@mui/material";
+import { deleteCita } from "../services/CitasServices";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Cita } from "../services/CitasServices";
+
 interface ModalDeleteProps {
   open: boolean;
   onClose: () => void;
-  onConfirm: () => void;
   appointment: Cita;
 }
 
 export function ModalDeleteAppointment({
   open,
   onClose,
-  onConfirm,
   appointment,
 }: ModalDeleteProps) {
+  const queryClient = useQueryClient();
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteCita,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["appointmentsInfo"] });
+      onClose(); // Close modal after successful deletion
+    },
+  });
+
+  const handleDeleteConfirm = () => {
+    if (appointment) {
+      console.log("appointment: ",appointment);
+      deleteMutation.mutate(appointment.cita_id);
+    }
+  };
+
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>Confirm Delete</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Are you sure you want to delete appointment for{" "}
-          {appointment.cliente_nombre + " " + appointment.cliente_apellido}?
+          Are you sure you want to delete the appointment for {" "}
+          {appointment?.cliente_nombre + " " + appointment?.cliente_apellido || "N/A"}?
         </DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="primary">
           Cancel
         </Button>
-        <Button onClick={onConfirm} color="secondary" autoFocus>
+        <Button onClick={handleDeleteConfirm} color="secondary" autoFocus>
           Delete
         </Button>
       </DialogActions>

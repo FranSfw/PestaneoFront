@@ -69,10 +69,12 @@ export async function createCita(cita: CitasCreate) {
   return response;
 }
 
-export async function deleteCita(citas_id: number) {
-  const response = await fetch(`${API_URL}/citas/${citas_id}`, {
+export async function deleteCita(cita_id: number) {
+  console.log("cita_id: ",cita_id);
+  const response = await fetch(`${API_URL}/citas/delete/${cita_id}`, {
     method: "DELETE",
   });
+  console.log("response: ",response.ok);
   return response;
 }
 
