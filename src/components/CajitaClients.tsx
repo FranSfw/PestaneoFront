@@ -121,7 +121,7 @@ const Cajita: React.FC<datosCajaClient> = ({
   const dolencia_ojosStr = dolencia_ojos ? "Sí" : "No";
   const latexStr = latex ? "Sí" : "No";
 
-  if (sensibilidad_productos === "")  {
+  if (sensibilidad_productos === "") {
     sensibilidad_productos = "N/A";
   }
 
@@ -132,7 +132,6 @@ const Cajita: React.FC<datosCajaClient> = ({
   if (alergias === "") {
     alergias = "N/A";
   }
-
 
   return (
     <>
@@ -237,7 +236,7 @@ const Cajita: React.FC<datosCajaClient> = ({
                         <div className="mt-2 flex justify-center relative pr-32">
                           <ModalView
                             closeModal={closeModal}
-                            type="next"
+                            type="last"
                             id={clienteid ?? 0}
                           />
                         </div>
@@ -245,7 +244,7 @@ const Cajita: React.FC<datosCajaClient> = ({
                         <div className="mt-2 flex justify-center relative pr-32">
                           <ModalView
                             closeModal={closeModal}
-                            type="last"
+                            type="next"
                             id={clienteid ?? 0}
                           />
                         </div>
@@ -273,4 +272,3 @@ const Cajita: React.FC<datosCajaClient> = ({
     </>
   );
 };
-

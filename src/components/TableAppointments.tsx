@@ -278,6 +278,7 @@ export function TablaCitas({ searchInput }: TableSearchProps) {
                 >
                   {" "}
                   <div style={{ display: "flex", gap: "0.5rem" }}>
+                    {/* Editar */}
                     <Button
                       variant="contained"
                       sx={{ bgcolor: "#4e68cf", width: "2rem" }}
@@ -285,6 +286,8 @@ export function TablaCitas({ searchInput }: TableSearchProps) {
                     >
                       <FontAwesomeIcon icon={faPenToSquare} className="" />
                     </Button>
+
+                    {/* Eliminar */}
                     <Button
                       variant="contained"
                       sx={{ bgcolor: "#f04141 ", width: "2rem" }}
@@ -292,6 +295,8 @@ export function TablaCitas({ searchInput }: TableSearchProps) {
                     >
                       <FontAwesomeIcon icon={faTrash} className="" />
                     </Button>
+
+                    {/* Ver */}
                     <Button
                       variant="contained"
                       sx={{ bgcolor: "green", width: "2rem" }}
