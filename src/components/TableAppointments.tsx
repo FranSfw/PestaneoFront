@@ -7,6 +7,7 @@ import {
   TableCell,
   TableRow,
   Paper,
+  TablePagination,
 } from "@mui/material";
 import {
   Cita,
@@ -60,6 +61,20 @@ export function TablaCitas({ searchInput }: TableSearchProps) {
     }
   }, [debouncedSearchTerm]);
 
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
   if (isLoading) {
     return <span>Loading...</span>;
   }
@@ -110,9 +125,18 @@ export function TablaCitas({ searchInput }: TableSearchProps) {
     });
   };
 
+  const emptyRows =
+    rowsPerPage - Math.min(rowsPerPage, data.citas.length - page * rowsPerPage);
+
+  const rowsHeight: string = "10vh";
+  const rowsHeiParsed = parseFloat(rowsHeight);
+
   return (
     <>
-      <TableContainer sx={{ borderRadius: "1rem" }} component={Paper}>
+      <TableContainer
+        sx={{ borderRadius: "1rem", Height: "100vh" }}
+        component={Paper}
+      >
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead sx={{ border: "1", bgcolor: "#e3e3e3" }}>
             <TableRow
@@ -201,121 +225,138 @@ export function TablaCitas({ searchInput }: TableSearchProps) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.citas.map((appointment) => (
-              <TableRow
-                key={appointment.cita_id}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                <TableCell
-                  sx={{
-                    fontSize: "1.1rem",
-                    width: "5%",
-                    paddingBottom: "1.5rem",
-                    paddingTop: "1.5rem",
-                  }}
+            {data.citas
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((appointment) => (
+                <TableRow
+                  style={{ height: rowsHeight }}
+                  key={appointment.cita_id}
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
-                  {formatDate(appointment.fecha)}
-                </TableCell>
-                <TableCell
-                  sx={{
-                    fontSize: "1.1rem",
-                    width: "10%",
-                    paddingBottom: "1.5rem",
-                    paddingTop: "1.5rem",
-                  }}
-                >
-                  {formatHour(appointment.fecha)}
-                </TableCell>
-                <TableCell
-                  sx={{
-                    fontSize: "1.1rem",
-                    width: "10%",
-                    paddingBottom: "1.5rem",
-                    paddingTop: "1.5rem",
-                  }}
-                >
-                  {appointment.cliente_nombre} {appointment.cliente_apellido}
-                </TableCell>
-                <TableCell
-                  sx={{
-                    fontSize: "1.1rem",
-                    width: "10%",
-                    paddingBottom: "1.5rem",
-                    paddingTop: "1.5rem",
-                  }}
-                >
-                  {appointment.encargado_nombre}{" "}
-                  {appointment.encargado_apellido}
-                </TableCell>
-                <TableCell
-                  sx={{
-                    fontSize: "1.1rem",
-                    width: "10%",
-                    paddingBottom: "1.5rem",
-                    paddingTop: "1.5rem",
-                  }}
-                >
-                  {appointment.tipo_procedimiento}
-                </TableCell>
-                <TableCell
-                  sx={{
-                    fontSize: "1.1rem",
-                    width: "10%",
-                    paddingBottom: "1.5rem",
-                    paddingTop: "1.5rem",
-                    textAlign: "center",
-                  }}
-                >
-                  {appointment.notas}
-                </TableCell>
-                <TableCell
-                  sx={{
-                    fontSize: "1.1rem",
-                    width: "5%",
-                    textAlign: "center",
-                    paddingLeft: "1rem",
-                  }}
-                >
-                  {" "}
-                  <div style={{ display: "flex", gap: "0.5rem" }}>
-                    {/* Editar */}
-                    <Button
-                      variant="contained"
-                      sx={{ bgcolor: "#4e68cf", width: "2rem" }}
-                      onClick={() => handleEdit(appointment)}
-                    >
-                      <FontAwesomeIcon icon={faPenToSquare} className="" />
-                    </Button>
+                  <TableCell
+                    sx={{
+                      fontSize: "1.1rem",
+                      width: "5%",
+                      paddingBottom: "1.5rem",
+                      paddingTop: "1.5rem",
+                    }}
+                  >
+                    {formatDate(appointment.fecha)}
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      fontSize: "1.1rem",
+                      width: "10%",
+                      paddingBottom: "1.5rem",
+                      paddingTop: "1.5rem",
+                    }}
+                  >
+                    {formatHour(appointment.fecha)}
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      fontSize: "1.1rem",
+                      width: "10%",
+                      paddingBottom: "1.5rem",
+                      paddingTop: "1.5rem",
+                    }}
+                  >
+                    {appointment.cliente_nombre} {appointment.cliente_apellido}
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      fontSize: "1.1rem",
+                      width: "10%",
+                      paddingBottom: "1.5rem",
+                      paddingTop: "1.5rem",
+                    }}
+                  >
+                    {appointment.encargado_nombre}{" "}
+                    {appointment.encargado_apellido}
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      fontSize: "1.1rem",
+                      width: "10%",
+                      paddingBottom: "1.5rem",
+                      paddingTop: "1.5rem",
+                    }}
+                  >
+                    {appointment.tipo_procedimiento}
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      fontSize: "1.1rem",
+                      width: "10%",
+                      paddingBottom: "1.5rem",
+                      paddingTop: "1.5rem",
+                      textAlign: "center",
+                    }}
+                  >
+                    {appointment.notas}
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      fontSize: "1.1rem",
+                      width: "5%",
+                      textAlign: "center",
+                      paddingLeft: "1rem",
+                    }}
+                  >
+                    {" "}
+                    <div style={{ display: "flex", gap: "0.5rem" }}>
+                      {/* Editar */}
+                      <Button
+                        variant="contained"
+                        sx={{ bgcolor: "#4e68cf", width: "2rem" }}
+                        onClick={() => handleEdit(appointment)}
+                      >
+                        <FontAwesomeIcon icon={faPenToSquare} className="" />
+                      </Button>
 
-                    {/* Eliminar */}
-                    <Button
-                      variant="contained"
-                      sx={{ bgcolor: "#f04141 ", width: "2rem" }}
-                      onClick={() => handleShow(appointment)}
-                    >
-                      <FontAwesomeIcon icon={faTrash} className="" />
-                    </Button>
+                      {/* Eliminar */}
+                      <Button
+                        variant="contained"
+                        sx={{ bgcolor: "#f04141 ", width: "2rem" }}
+                        onClick={() => handleShow(appointment)}
+                      >
+                        <FontAwesomeIcon icon={faTrash} className="" />
+                      </Button>
 
-                    {/* Ver */}
-                    <Button
-                      variant="contained"
-                      sx={{ bgcolor: "green", width: "2rem" }}
-                      onClick={() => handleShow(appointment)}
-                    >
-                      <FontAwesomeIcon icon={faEye} className="" />
-                    </Button>
-                  </div>
-                </TableCell>
+                      {/* Ver */}
+                      <Button
+                        variant="contained"
+                        sx={{ bgcolor: "green", width: "2rem" }}
+                        onClick={() => handleShow(appointment)}
+                      >
+                        <FontAwesomeIcon icon={faEye} className="" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            {emptyRows > 0 && (
+              <TableRow style={{ height: rowsHeiParsed * emptyRows * 1.075 + "vh" }}>
+                <TableCell colSpan={6} />
               </TableRow>
-            ))}
+            )}
           </TableBody>
         </Table>
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 15]}
+          component="div"
+          count={data.citas.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
       </TableContainer>
       {showModal && selectedAppointment && (
         <ModalDeleteAppointment
           open={showModal}
           onClose={handleCloseModal}
-          //onConfirm={handleDeleteConfirm}
+          // onConfirm={handleDeleteConfirm}
           appointment={selectedAppointment}
         />
       )}
