@@ -30,8 +30,8 @@ export function ComboBoxEmployees({
           Selecciona una opción
         </option>
         {options.map((option) => (
-          <option key={option.empleado_id} value={option.empleado_id}>
-            {option.empleado_id +" "+option.nombre + " " + option.apellido}
+          <option key={option.id} value={option.id}>
+            {option.id + " " + option.nombre + " " + option.apellido}
           </option>
         ))}
       </select>

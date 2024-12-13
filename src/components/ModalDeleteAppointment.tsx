@@ -26,14 +26,14 @@ export function ModalDeleteAppointment({
   const deleteMutation = useMutation({
     mutationFn: deleteCita,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["appointmentsInfo"] });
+      queryClient.invalidateQueries({ queryKey: ["citasInfo"] });
       onClose(); // Close modal after successful deletion
     },
   });
 
   const handleDeleteConfirm = () => {
     if (appointment) {
-      console.log("appointment: ",appointment);
+      console.log("appointment: ", appointment);
       deleteMutation.mutate(appointment.cita_id);
     }
   };
@@ -43,8 +43,10 @@ export function ModalDeleteAppointment({
       <DialogTitle>Confirm Delete</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Are you sure you want to delete the appointment for {" "}
-          {appointment?.cliente_nombre + " " + appointment?.cliente_apellido || "N/A"}?
+          Are you sure you want to delete the appointment for{" "}
+          {appointment?.cliente_nombre + " " + appointment?.cliente_apellido ||
+            "N/A"}
+          ?
         </DialogContentText>
       </DialogContent>
       <DialogActions>

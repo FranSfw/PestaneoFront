@@ -5,7 +5,7 @@ import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { Fields } from "../components/Fields";
 import { useState, useEffect } from "react";
 import { ComboBox } from "../components/ComboBox";
-import { FilteredHoursDropdown } from "../components/FilteredHoursDropdown"
+import { FilteredHoursDropdown } from "../components/FilteredHoursDropdown";
 import { ComboBoxEmployees } from "../components/ComboBoxEmployees";
 import { useDebounce } from "@uidotdev/usehooks";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
@@ -63,7 +63,7 @@ export function ModalInsertCita({ closeModal }: ModalInsertProps) {
     mutationFn: createCita,
     onSuccess: () => {
       // Invalidate and refetch
-      queryClient.invalidateQueries({ queryKey: ["appointmentsInfo"] });
+      queryClient.invalidateQueries({ queryKey: ["citasInfo"] });
       setShowModal(false);
       setFirstName("");
       setLastName("");
@@ -77,7 +77,6 @@ export function ModalInsertCita({ closeModal }: ModalInsertProps) {
       setTamaño("");
       setCurvatura("");
       setEspesura("");
-
     },
     onError: (error) => {
       setErrorCreate(error.message);
@@ -104,24 +103,21 @@ export function ModalInsertCita({ closeModal }: ModalInsertProps) {
     }
   };
 
-
-
   const handleAddClick = () => {
     setShowModal(true);
   };
 
   const newAppointment: CitasCreate = {
     telefono: phone,
-    fecha: (date + " " + hour),
+    fecha: date + " " + hour,
     encargado: 1,
     procedimiento: parseInt(procedimiento),
     notas: notas,
     mapping_estilo: mappingStyle,
     tamaño: tamaño,
     curvatura: curvatura,
-    espessura: espesura
+    espessura: espesura,
   };
-
 
   return (
     <>
@@ -188,7 +184,6 @@ export function ModalInsertCita({ closeModal }: ModalInsertProps) {
                         options={empleadoResult.data?.empleados}
                         onChange={(e) => setEmpleado(e.target.value)}
                         className={empleadoResult.isSuccess ? "" : "disabled"}
-
                       />
                     </div>
                     <div className="relative grid  w-full overflow-wrap">

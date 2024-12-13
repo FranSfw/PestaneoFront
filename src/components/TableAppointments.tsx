@@ -28,25 +28,25 @@ export interface TableSearchProps {
 }
 
 export function TablaCitas({ searchInput }: TableSearchProps) {
-  const queryClient = useQueryClient();
-  const { isLoading, isError, data, error } = useQuery({
-    queryKey: ["citasInfo"],
-    queryFn: getAllCitas,
-  });
   const [showModal, setShowModal] = useState(false);
   const [showUpdate, setshowUpdate] = useState(false);
   const [selectedAppointment, setselectedAppointment] = useState<
     Cita | undefined
   >(undefined);
+  const queryClient = useQueryClient();
+  const { isLoading, isError, data, error } = useQuery({
+    queryKey: ["citasInfo"],
+    queryFn: getAllCitas,
+  });
+
   const debouncedSearchTerm = useDebounce(searchInput, 500);
 
   const deleteMutation = useMutation({
     mutationFn: deleteCita,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["appointmentsInfo"] });
+      queryClient.invalidateQueries({ queryKey: ["citasInfo"] });
       setShowModal(false); // Close modal after successful deletion
     },
-
   });
   const searchMutation = useMutation({
     mutationFn: searchAppointment,
@@ -81,7 +81,6 @@ export function TablaCitas({ searchInput }: TableSearchProps) {
     setShowModal(true);
   };
 
-
   const handleCloseModal = () => {
     setShowModal(false);
     setselectedAppointment(undefined);
@@ -104,7 +103,7 @@ export function TablaCitas({ searchInput }: TableSearchProps) {
   const formatHour = (fecha: Date | string | undefined) => {
     if (!fecha) return "N/A";
     const date = new Date(fecha);
-    return date.toLocaleString("es-MX", {
+    return date.toLocaleTimeString("es-MX", {
       hour: "2-digit",
       minute: "2-digit",
       hour12: false,
@@ -204,7 +203,7 @@ export function TablaCitas({ searchInput }: TableSearchProps) {
           <TableBody>
             {data.citas.map((appointment) => (
               <TableRow
-                key={appointment.citas_id}
+                key={appointment.cita_id}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell
