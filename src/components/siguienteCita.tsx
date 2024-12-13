@@ -86,7 +86,7 @@ export function SiguienteCita() {
           </li>
         </ul>
       </div>
-      <div className="relative">
+      <div className="relative ">
         <ModalView closeModal={closeModal} type="next" id={clienteid ?? 0} />
       </div>
 
@@ -117,7 +117,7 @@ export function SiguienteCita() {
         )}
       </div>
       <div className="relative">
-        <ModalView closeModal={closeModal} type="next" id={clienteid ?? 0} />
+        <ModalView closeModal={closeModal} type="last" id={clienteid ?? 0} />
       </div>
     </div>
   );
