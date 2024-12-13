@@ -1,29 +1,56 @@
-import { useEffect, useState } from "react";
-import { IconButton } from "../components/IconButton";
-import { faEye } from "@fortawesome/free-solid-svg-icons";
-import { Fields2 } from "../components/Fields2";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { Cita, getAllCitas } from "../services/CitasServices";
-import { lastCita } from "../services/CitasServices";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useState } from "react";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
+import { Cita, updateAppointment } from "../services/CitasServices";
+import { getAllempleados } from "../services/EmpleadosServices";
+import { Fields2 } from "./Fields2";
 
-interface ModalInsertProps {
-  closeModal: () => void;
-
-  type: "next" | "last" | string;
-  id: number;
+interface ModalUpdateProps {
+  open: boolean;
+  onClose: () => void;
+  appointment: Cita;
 }
 
-export function ModalView({ type, id }: ModalInsertProps) {
-  const [showModal, setShowModal] = useState(
-    type !== "next" && type !== "last"
+export function ModalViewAppointment({
+  open,
+  onClose,
+  appointment,
+}: ModalUpdateProps) {
+  const formattedDate = appointment.fecha.split("T")[0];
+  const formattedHour = new Date(appointment.fecha).toLocaleTimeString(
+    "es-MX",
+    {
+      hourCycle: "h23",
+      hour: "2-digit",
+      minute: "2-digit",
+    }
   );
-  const { data } = useQuery({ queryKey: ["citasInfo"], queryFn: getAllCitas });
-  const mutation = useMutation({ mutationFn: lastCita });
 
-  const citas = data?.citas || [];
-  const formatFecha = (fecha: Date | string | undefined) => {
-    if (fecha === undefined) return "";
+  const [dialogue, setDialogue] = useState(false);
+  const queryClient = useQueryClient();
+  const [date, setDate] = useState(formattedDate);
+  const [hour, setHour] = useState(formattedHour);
+  const [inhabilitado, setInhabilitado] = useState(true);
+  const [error, setError] = useState("");
+  const [newAppointment, setNewAppointment] = useState<Cita>(appointment);
+
+  const employeesResult = useQuery({
+    queryKey: ["empleadosInfo"],
+    queryFn: getAllempleados,
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: updateAppointment,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["citasInfo"] });
+      setDialogue(false);
+      onClose();
+    },
+    onError: (error: any) => {
+      setError((error as Error).message);
+    },
+  });
+
+  const formatFecha = (fecha: string) => {
     const date = new Date(fecha);
     return date.toLocaleString("es-MX", {
       year: "numeric",
@@ -35,63 +62,13 @@ export function ModalView({ type, id }: ModalInsertProps) {
     });
   };
 
-  // id es el id del cliente
-  console.log("Tipo de cita:", type);
-
-  let cita;
-  let clienteid = id;
-
-  console.log("Cliente id:", clienteid);
-
-  useEffect(() => {
-    if (clienteid) {
-      console.log("Buscando la última cita del cliente con id:", clienteid);
-      mutation.mutate(clienteid);
-    }
-  }, [clienteid]);
-
-  if (mutation.isLoading) {
-    console.log("Cargando la última cita...");
-  }
-
-  if (mutation.error) {
-    console.error("Ocurrió un error al cargar la última cita", mutation.error);
-  }
-
-  if (type === "next") {
-    // buscar la cita siguiente del cliente con id
-    cita = citas.find((cita: Cita) => cita.cliente_id === id);
-    console.log("Cita después:", cita);
-  }
-
-  if (type === "last") {
-    if (mutation.data && mutation.data.cita && mutation.data.cita.length > 0) {
-      const citaAnterior = mutation.data.cita[0];
-      cita = citaAnterior;
-    }
+  if (!employeesResult.isSuccess) {
+    return <span>Loading...</span>;
   }
 
   return (
     <>
-      {/* Mostrar botón solo si es "next" o "last" */}
-      {(type === "next" || type === "last") && (
-        <button
-
-          className="group flex absolute px-4 bg-tertiaryYellow rounded-full h-12 items-center justify-center hover:bg-primaryBlack focus:bg-primaryBlack text-primaryBlack hover:text-tertiaryYellow focus:text-tertiaryYellow transition-all hover:duration-300 focus:duration-0"
-          onClick={() => setShowModal(true)}
-        >
-          <div>
-            <FontAwesomeIcon icon={faEye} className="" />
-          </div>
-
-          <div>
-            <p className="my-2 pl-2 text-xl font-medium">Ver cita</p>
-          </div>
-        </button>
-      )}
-
-      {/* Mostrar modal directamente o bajo demanda */}
-      {showModal && cita ? (
+      {open && (
         <>
           <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
             <div className="relative w-auto my-6 mx-auto max-w-3xl">
@@ -104,7 +81,7 @@ export function ModalView({ type, id }: ModalInsertProps) {
                   </h3>
                   <button
                     className="p-1 ml-auto bg-transparent border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
-                    onClick={() => setShowModal(false)}
+                    onClick={onClose}
                   >
                     ×
                   </button>
@@ -115,7 +92,7 @@ export function ModalView({ type, id }: ModalInsertProps) {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="flex justify-center items-center">
                       <img
-                        src={`src/assets/${cita.foto}`}
+                        src={`src/assets/${appointment.foto}`}
                         alt="Foto de perfil"
                         className="w-64 h-32 rounded-full object-contain mx-auto"
                       />
@@ -124,46 +101,46 @@ export function ModalView({ type, id }: ModalInsertProps) {
                     <div className="flex justify-center items-start">
                       <Fields2
                         label="Cliente"
-                        value={`${cita.cliente_nombre} ${cita.cliente_apellido}`}
+                        value={`${appointment.cliente_nombre} ${appointment.cliente_apellido}`}
                       />
                     </div>
 
                     <div className="flex flex-col gap-4">
                       <Fields2
                         label="Fecha de la cita"
-                        value={formatFecha(cita.fecha)}
+                        value={formatFecha(appointment.fecha)}
                       />
                     </div>
 
                     <div className="flex flex-col gap-4">
                       <Fields2
                         label="Procedimiento"
-                        value={cita.tipo_procedimiento}
+                        value={appointment.tipo_procedimiento}
                       />
                     </div>
 
                     <div className="flex flex-col gap-4">
                       <Fields2
                         label="Estilo de Mapping"
-                        value={cita.mapping_estilo}
+                        value={appointment.mapping_estilo}
                       />
                     </div>
 
                     <div className="flex flex-col gap-4">
-                      <Fields2 label="Tamaño de Mapping" value={cita.tamaño} />
+                      <Fields2 label="Tamaño de Mapping" value={appointment.tamaño} />
                     </div>
 
                     <div className="flex flex-col gap-4">
-                      <Fields2 label="Curvatura" value={cita.curvatura} />
+                      <Fields2 label="Curvatura" value={appointment.curvatura} />
                     </div>
 
                     <div className="flex flex-col gap-4">
-                      <Fields2 label="Espesura" value={cita.espessura} />
+                      <Fields2 label="Espesura" value={appointment.espessura} />
                     </div>
                   </div>
 
                   <div className="flex flex-col gap-4 pt-6">
-                    <Fields2 label="Notas" value={cita.notas} />
+                    <Fields2 label="Notas" value={appointment.notas} />
                   </div>
                 </div>
 
@@ -172,7 +149,7 @@ export function ModalView({ type, id }: ModalInsertProps) {
                   <button
                     className="background-transparent text-red-500 hover:bg-red-500 hover:text-white font-bold uppercase px-6 py-3 text-sm rounded transition-all"
                     type="button"
-                    onClick={() => setShowModal(false)}
+                    onClick={onClose}
                   >
                     Cerrar
                   </button>
@@ -182,7 +159,7 @@ export function ModalView({ type, id }: ModalInsertProps) {
           </div>
           <div className="opacity-50 fixed inset-0 z-40 bg-black"></div>
         </>
-      ) : null}
+      )}
     </>
   );
 }

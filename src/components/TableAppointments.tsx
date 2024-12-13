@@ -23,6 +23,7 @@ import { ModalDeleteAppointment } from "./ModalDeleteAppointment.tsx";
 import { ModalUpdateAppointment } from "./ModalUpdateAppointment";
 import { faEye } from "@fortawesome/free-solid-svg-icons/faEye";
 import { useDebounce } from "@uidotdev/usehooks";
+import { ModalViewAppointment } from "./ModalViewAppointment.tsx";
 
 export interface TableSearchProps {
   searchInput: string;
@@ -31,6 +32,8 @@ export interface TableSearchProps {
 export function TablaCitas({ searchInput }: TableSearchProps) {
   const [showModal, setShowModal] = useState(false);
   const [showUpdate, setshowUpdate] = useState(false);
+  const [showView, setShowView] = useState(false);
+
   const [selectedAppointment, setselectedAppointment] = useState<
     Cita | undefined
   >(undefined);
@@ -102,6 +105,16 @@ export function TablaCitas({ searchInput }: TableSearchProps) {
   };
   const handleCloseUpdateModal = () => {
     setshowUpdate(false);
+    setselectedAppointment(undefined);
+  };
+
+  const handleView = (appointment: Cita) => {
+    setselectedAppointment(appointment);
+    setShowView(true);
+  };
+
+  const handleViewClose = () => {
+    setShowView(false);
     setselectedAppointment(undefined);
   };
 
@@ -327,7 +340,7 @@ export function TablaCitas({ searchInput }: TableSearchProps) {
                       <Button
                         variant="contained"
                         sx={{ bgcolor: "green", width: "2rem" }}
-                        onClick={() => handleShow(appointment)}
+                        onClick={() => handleView(appointment)}
                       >
                         <FontAwesomeIcon icon={faEye} className="" />
                       </Button>
@@ -336,7 +349,9 @@ export function TablaCitas({ searchInput }: TableSearchProps) {
                 </TableRow>
               ))}
             {emptyRows > 0 && (
-              <TableRow style={{ height: rowsHeiParsed * emptyRows * 1.075 + "vh" }}>
+              <TableRow
+                style={{ height: rowsHeiParsed * emptyRows * 1.075 + "vh" }}
+              >
                 <TableCell colSpan={6} />
               </TableRow>
             )}
@@ -352,6 +367,7 @@ export function TablaCitas({ searchInput }: TableSearchProps) {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </TableContainer>
+
       {showModal && selectedAppointment && (
         <ModalDeleteAppointment
           open={showModal}
@@ -364,6 +380,13 @@ export function TablaCitas({ searchInput }: TableSearchProps) {
         <ModalUpdateAppointment
           open={showUpdate}
           onClose={handleCloseUpdateModal}
+          appointment={selectedAppointment}
+        />
+      )}
+      {showView && selectedAppointment && (
+        <ModalViewAppointment
+          open={showView}
+          onClose={handleViewClose}
           appointment={selectedAppointment}
         />
       )}
