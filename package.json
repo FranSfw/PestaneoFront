@@ -29,7 +29,9 @@
     "react-query": "^3.39.3",
     "react-router-dom": "^6.27.0",
     "react-slick": "^0.30.2",
-    "signature_pad": "^5.0.4"
+    "signature_pad": "^5.0.4",
+    "sweetalert2": "^11.15.0",
+    "sweetalert2-react-content": "^5.0.7"
   },
   "devDependencies": {
     "@eslint/js": "^9.11.1",
@@ -43,6 +45,7 @@
     "eslint-plugin-react-refresh": "^0.4.12",
     "globals": "^15.9.0",
     "postcss": "^8.4.47",
+    "sass-embedded": "^1.83.0",
     "tailwindcss": "^3.4.13",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.7.0",

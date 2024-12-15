@@ -10,11 +10,11 @@ import {
   TablePagination,
 } from "@mui/material";
 import {
-  Cita,
-  deleteCita,
-  getAllCitas,
-  searchAppointment,
-} from "../services/CitasServices.ts";
+  Cliente,
+  deleteCliente,
+  getAllClientes,
+  searchCliente,
+} from "../services/ClientesServices.ts";
 import { Button } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
@@ -29,33 +29,33 @@ export interface TableSearchProps {
   searchInput: string;
 }
 
-export function TablaCitas({ searchInput }: TableSearchProps) {
+export function TablaClientes({ searchInput }: TableSearchProps) {
   const [showModal, setShowModal] = useState(false);
   const [showUpdate, setshowUpdate] = useState(false);
   const [showView, setShowView] = useState(false);
 
   const [selectedAppointment, setselectedAppointment] = useState<
-    Cita | undefined
+    Cliente | undefined
   >(undefined);
   const queryClient = useQueryClient();
   const { isLoading, isError, data, error } = useQuery({
-    queryKey: ["citasInfo"],
-    queryFn: getAllCitas,
+    queryKey: ["clientesinfo"],
+    queryFn: getAllClientes,
   });
 
   const debouncedSearchTerm = useDebounce(searchInput, 500);
 
   const deleteMutation = useMutation({
-    mutationFn: deleteCita,
+    mutationFn: deleteCliente,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["citasInfo"] });
+      queryClient.invalidateQueries({ queryKey: ["clienteInfo"] });
       setShowModal(false); // Close modal after successful deletion
     },
   });
   const searchMutation = useMutation({
-    mutationFn: searchAppointment,
+    mutationFn: searchCliente,
     onSuccess: (data) => {
-      queryClient.setQueryData(["appointmentsInfo"], data);
+      queryClient.setQueryData(["clientesInfo"], data);
     },
   });
   useEffect(() => {
@@ -65,7 +65,7 @@ export function TablaCitas({ searchInput }: TableSearchProps) {
   }, [debouncedSearchTerm]);
 
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(3);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -89,13 +89,13 @@ export function TablaCitas({ searchInput }: TableSearchProps) {
     return <span>No hay datos disponibles</span>;
   }
 
-  const handleEdit = (appointment: Cita) => {
-    setselectedAppointment(appointment);
+  const handleEdit = (cliente: Cliente) => {
+    setselectedAppointment(cliente);
     setshowUpdate(true);
   };
 
-  const handleShow = (appointment: Cita) => {
-    setselectedAppointment(appointment);
+  const handleShow = (cliente: Cliente) => {
+    setselectedAppointment(cliente);
     setShowModal(true);
   };
 
@@ -108,8 +108,8 @@ export function TablaCitas({ searchInput }: TableSearchProps) {
     setselectedAppointment(undefined);
   };
 
-  const handleView = (appointment: Cita) => {
-    setselectedAppointment(appointment);
+  const handleView = (cliente: Cliente) => {
+    setselectedCCliente(cliente);
     setShowView(true);
   };
 
@@ -139,7 +139,8 @@ export function TablaCitas({ searchInput }: TableSearchProps) {
   };
 
   const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, data.citas.length - page * rowsPerPage);
+    rowsPerPage -
+    Math.min(rowsPerPage, data.clientes.length - page * rowsPerPage);
 
   const rowsHeight: number = 10;
 
@@ -149,7 +150,7 @@ export function TablaCitas({ searchInput }: TableSearchProps) {
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead
             sx={{ border: "1", bgcolor: "#e3e3e3" }}
-            style={{ height: "1vh" }}
+            style={{ height: "1rem" }}
           >
             <TableRow
               sx={{
@@ -161,40 +162,40 @@ export function TablaCitas({ searchInput }: TableSearchProps) {
             >
               <TableCell
                 sx={{
-                  fontSize: "1rem",
+                  fontSize: "1.4rem",
                   fontWeight: "bold",
                   color: "text.primary",
                   width: "10%",
                 }}
                 align="justify"
               >
-                Fecha
+                Nombre
               </TableCell>
               <TableCell
                 sx={{
-                  fontSize: "1rem",
+                  fontSize: "1.4rem",
                   fontWeight: "bold",
                   color: "text.primary",
                   width: "10%",
                 }}
                 align="justify"
               >
-                Hora
+                Télefono
               </TableCell>
               <TableCell
                 sx={{
-                  fontSize: "1rem",
+                  fontSize: "1.4rem",
                   fontWeight: "bold",
                   color: "text.primary",
                   width: "10%",
                 }}
                 align="justify"
               >
-                Cliente
+                Email
               </TableCell>
               <TableCell
                 sx={{
-                  fontSize: "1rem",
+                  fontSize: "1.4rem",
                   fontWeight: "bold",
                   color: "text.primary",
                   width: "10%",
@@ -205,18 +206,18 @@ export function TablaCitas({ searchInput }: TableSearchProps) {
               </TableCell>
               <TableCell
                 sx={{
-                  fontSize: "1rem",
+                  fontSize: "1.4rem",
                   fontWeight: "bold",
                   color: "text.primary",
                   width: "10%",
                 }}
-                align="center"
+                align="left"
               >
-                Procedimiento
+                Tipo de Procedimiento
               </TableCell>
               <TableCell
                 sx={{
-                  fontSize: "1rem",
+                  fontSize: "1.4rem",
                   fontWeight: "bold",
                   color: "text.primary",
                   width: "10%",
@@ -227,7 +228,7 @@ export function TablaCitas({ searchInput }: TableSearchProps) {
               </TableCell>
               <TableCell
                 sx={{
-                  fontSize: "1rem",
+                  fontSize: "1.4rem",
                   fontWeight: "bold",
                   color: "text.primary",
                   width: "5%",
@@ -237,50 +238,50 @@ export function TablaCitas({ searchInput }: TableSearchProps) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.citas
+            {data.clientes
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((appointment) => (
+              .map((cliente) => (
                 <TableRow
-                  style={{ height: rowsHeight + "vh" }}
-                  key={appointment.cita_id}
+                  style={{ height: 5 }}
+                  key={cliente.cliente_id}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   <TableCell
                     sx={{
-                      fontSize: "1rem",
+                      fontSize: "1.1rem",
                       width: "5%",
-                      paddingBottom: "1rem",
-                      paddingTop: "1rem",
+                      paddingBottom: "1.5rem",
+                      paddingTop: "1.5rem",
                     }}
                   >
                     {formatDate(appointment.fecha)}
                   </TableCell>
                   <TableCell
                     sx={{
-                      fontSize: "1rem",
+                      fontSize: "1.1rem",
                       width: "10%",
-                      paddingBottom: "1rem",
-                      paddingTop: "1rem",
+                      paddingBottom: "1.5rem",
+                      paddingTop: "1.5rem",
                     }}
                   >
                     {formatHour(appointment.fecha)}
                   </TableCell>
                   <TableCell
                     sx={{
-                      fontSize: "1rem",
+                      fontSize: "1.1rem",
                       width: "10%",
-                      paddingBottom: "1rem",
-                      paddingTop: "1rem",
+                      paddingBottom: "1.5rem",
+                      paddingTop: "1.5rem",
                     }}
                   >
-                    {appointment.cliente_nombre} {appointment.cliente_apellido}
+                    {cliente.nombre} {cliente.apellido}
                   </TableCell>
                   <TableCell
                     sx={{
-                      fontSize: "1rem",
+                      fontSize: "1.1rem",
                       width: "10%",
-                      paddingBottom: "1rem",
-                      paddingTop: "1rem",
+                      paddingBottom: "1.5rem",
+                      paddingTop: "1.5rem",
                     }}
                   >
                     {appointment.encargado_nombre}{" "}
@@ -288,20 +289,20 @@ export function TablaCitas({ searchInput }: TableSearchProps) {
                   </TableCell>
                   <TableCell
                     sx={{
-                      fontSize: "1rem",
+                      fontSize: "1.1rem",
                       width: "10%",
-                      paddingBottom: "1rem",
-                      paddingTop: "1rem",
+                      paddingBottom: "1.5rem",
+                      paddingTop: "1.5rem",
                     }}
                   >
                     {appointment.tipo_procedimiento}
                   </TableCell>
                   <TableCell
                     sx={{
-                      fontSize: "1rem",
+                      fontSize: "1.1rem",
                       width: "10%",
-                      paddingBottom: "1rem",
-                      paddingTop: "1rem",
+                      paddingBottom: "1.5rem",
+                      paddingTop: "1.5rem",
                       textAlign: "center",
                     }}
                   >
@@ -309,14 +310,14 @@ export function TablaCitas({ searchInput }: TableSearchProps) {
                   </TableCell>
                   <TableCell
                     sx={{
-                      fontSize: "1rem",
+                      fontSize: "1.1rem",
                       width: "5%",
                       textAlign: "center",
                       paddingLeft: "1rem",
                     }}
                   >
                     {" "}
-                    <div style={{ display: "grid", gap: "0.5rem" }}>
+                    <div style={{ display: "flex", gap: "0.5rem" }}>
                       {/* Editar */}
                       <Button
                         variant="contained"
@@ -357,7 +358,7 @@ export function TablaCitas({ searchInput }: TableSearchProps) {
           </TableBody>
         </Table>
         <TablePagination
-          rowsPerPageOptions={[3, 4, 5]}
+          rowsPerPageOptions={[5, 10, 15]}
           component="div"
           count={data.citas.length}
           rowsPerPage={rowsPerPage}

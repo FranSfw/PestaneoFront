@@ -120,11 +120,35 @@ export async function clienteAgregar(create: clienteCreate) {
       firma: create.firma,
       fecha_ultimo_procedimiento: create.fecha_ultimo_procedimiento,
       ultimo_procedimiento: create.ultimo_procedimiento,
-     
     }),
   });
   console.log(response.json());
   console.log(response);
   const responsedata = await response.json();
   return responsedata;
+}
+
+export async function deleteCliente(id: number) {
+  const response = await fetch(`${API_URL}/users/delete/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const responsedata = await response.json();
+  return responsedata;
+}
+
+export async function searchCliente(search: string) {
+  const response = await fetch(`${API_URL}/clientes/phone`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      phone_number: search,
+    }),
+  });
+  const data = await response.json();
+  return data;
 }

@@ -19,6 +19,7 @@ import { Button2 } from "../components/Button2";
 import { useState } from "react";
 import { ModalView } from "../components/ModalView";
 import { SiguienteCita } from "../components/siguienteCita";
+import Alert from "../components/Alert";
 
 export function Dashboard() {
   const navigate = useNavigate();
