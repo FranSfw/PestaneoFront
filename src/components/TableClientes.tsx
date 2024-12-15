@@ -19,11 +19,8 @@ import { Button } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
-import { ModalDeleteAppointment } from "./ModalDeleteAppointment.tsx";
-import { ModalUpdateAppointment } from "./ModalUpdateAppointment";
 import { faEye } from "@fortawesome/free-solid-svg-icons/faEye";
 import { useDebounce } from "@uidotdev/usehooks";
-import { ModalViewAppointment } from "./ModalViewAppointment.tsx";
 
 export interface TableSearchProps {
   searchInput: string;
@@ -34,9 +31,9 @@ export function TablaClientes({ searchInput }: TableSearchProps) {
   const [showUpdate, setshowUpdate] = useState(false);
   const [showView, setShowView] = useState(false);
 
-  const [selectedAppointment, setselectedAppointment] = useState<
-    Cliente | undefined
-  >(undefined);
+  const [selectedCliente, setselectedCliente] = useState<Cliente | undefined>(
+    undefined
+  );
   const queryClient = useQueryClient();
   const { isLoading, isError, data, error } = useQuery({
     queryKey: ["clientesinfo"],
@@ -90,32 +87,32 @@ export function TablaClientes({ searchInput }: TableSearchProps) {
   }
 
   const handleEdit = (cliente: Cliente) => {
-    setselectedAppointment(cliente);
+    setselectedCliente(cliente);
     setshowUpdate(true);
   };
 
   const handleShow = (cliente: Cliente) => {
-    setselectedAppointment(cliente);
+    setselectedCliente(cliente);
     setShowModal(true);
   };
 
   const handleCloseModal = () => {
     setShowModal(false);
-    setselectedAppointment(undefined);
+    setselectedCliente(undefined);
   };
   const handleCloseUpdateModal = () => {
     setshowUpdate(false);
-    setselectedAppointment(undefined);
+    setselectedCliente(undefined);
   };
 
   const handleView = (cliente: Cliente) => {
-    setselectedCCliente(cliente);
+    setselectedCliente(cliente);
     setShowView(true);
   };
 
   const handleViewClose = () => {
     setShowView(false);
-    setselectedAppointment(undefined);
+    setselectedCliente(undefined);
   };
 
   const formatDate = (fecha: Date | string | undefined) => {
@@ -202,7 +199,7 @@ export function TablaClientes({ searchInput }: TableSearchProps) {
                 }}
                 align="justify"
               >
-                Encargado
+                Fecha de Ultimo Procedimiento
               </TableCell>
               <TableCell
                 sx={{
@@ -213,19 +210,9 @@ export function TablaClientes({ searchInput }: TableSearchProps) {
                 }}
                 align="left"
               >
-                Tipo de Procedimiento
+                Último Procedimiento
               </TableCell>
-              <TableCell
-                sx={{
-                  fontSize: "1.4rem",
-                  fontWeight: "bold",
-                  color: "text.primary",
-                  width: "10%",
-                }}
-                align="center"
-              >
-                Notas
-              </TableCell>
+
               <TableCell
                 sx={{
                   fontSize: "1.4rem",
@@ -254,7 +241,7 @@ export function TablaClientes({ searchInput }: TableSearchProps) {
                       paddingTop: "1.5rem",
                     }}
                   >
-                    {formatDate(appointment.fecha)}
+                    {cliente.nombre} {cliente.apellido}
                   </TableCell>
                   <TableCell
                     sx={{
@@ -264,7 +251,7 @@ export function TablaClientes({ searchInput }: TableSearchProps) {
                       paddingTop: "1.5rem",
                     }}
                   >
-                    {formatHour(appointment.fecha)}
+                    {cliente.telefono}
                   </TableCell>
                   <TableCell
                     sx={{
@@ -284,8 +271,7 @@ export function TablaClientes({ searchInput }: TableSearchProps) {
                       paddingTop: "1.5rem",
                     }}
                   >
-                    {appointment.encargado_nombre}{" "}
-                    {appointment.encargado_apellido}
+                    {cliente.email}
                   </TableCell>
                   <TableCell
                     sx={{
@@ -295,7 +281,7 @@ export function TablaClientes({ searchInput }: TableSearchProps) {
                       paddingTop: "1.5rem",
                     }}
                   >
-                    {appointment.tipo_procedimiento}
+                    {formatDate(cliente.fecha_ultimo_procedimiento)}
                   </TableCell>
                   <TableCell
                     sx={{
@@ -306,7 +292,7 @@ export function TablaClientes({ searchInput }: TableSearchProps) {
                       textAlign: "center",
                     }}
                   >
-                    {appointment.notas}
+                    {cliente.ultimo_procedimiento}
                   </TableCell>
                   <TableCell
                     sx={{
@@ -322,7 +308,7 @@ export function TablaClientes({ searchInput }: TableSearchProps) {
                       <Button
                         variant="contained"
                         sx={{ bgcolor: "#4e68cf", width: "2rem" }}
-                        onClick={() => handleEdit(appointment)}
+                        onClick={() => handleEdit(cliente)}
                       >
                         <FontAwesomeIcon icon={faPenToSquare} className="" />
                       </Button>
@@ -331,7 +317,7 @@ export function TablaClientes({ searchInput }: TableSearchProps) {
                       <Button
                         variant="contained"
                         sx={{ bgcolor: "#f04141 ", width: "2rem" }}
-                        onClick={() => handleShow(appointment)}
+                        onClick={() => handleShow(cliente)}
                       >
                         <FontAwesomeIcon icon={faTrash} className="" />
                       </Button>
@@ -340,7 +326,7 @@ export function TablaClientes({ searchInput }: TableSearchProps) {
                       <Button
                         variant="contained"
                         sx={{ bgcolor: "green", width: "2rem" }}
-                        onClick={() => handleView(appointment)}
+                        onClick={() => handleView(cliente)}
                       >
                         <FontAwesomeIcon icon={faEye} className="" />
                       </Button>
@@ -360,7 +346,7 @@ export function TablaClientes({ searchInput }: TableSearchProps) {
         <TablePagination
           rowsPerPageOptions={[5, 10, 15]}
           component="div"
-          count={data.citas.length}
+          count={data.clientes.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
@@ -368,26 +354,26 @@ export function TablaClientes({ searchInput }: TableSearchProps) {
         />
       </TableContainer>
 
-      {showModal && selectedAppointment && (
-        <ModalDeleteAppointment
+      {showModal && selectedCliente && (
+        <ModalDeleteCliente
           open={showModal}
           onClose={handleCloseModal}
           // onConfirm={handleDeleteConfirm}
-          appointment={selectedAppointment}
+          cliente={selectedCliente}
         />
       )}
       {showUpdate && selectedAppointment && (
-        <ModalUpdateAppointment
+        <ModalUpdateCliente
           open={showUpdate}
           onClose={handleCloseUpdateModal}
-          appointment={selectedAppointment}
+          cliente={selectedCliente}
         />
       )}
       {showView && selectedAppointment && (
-        <ModalViewAppointment
+        <ModalViewCliente
           open={showView}
           onClose={handleViewClose}
-          appointment={selectedAppointment}
+          cliente={selectedCliente}
         />
       )}
     </>
