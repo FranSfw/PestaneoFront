@@ -17,7 +17,7 @@ interface ModalInsertProps {
   closeModal?: () => void;
 }
 
-export function ModalInsertCita({ closeModal }: ModalInsertProps) {
+export function ModalInsertCita() {
   const queryClient = useQueryClient();
   const [showModal, setShowModal] = React.useState(false);
 

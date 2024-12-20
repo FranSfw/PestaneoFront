@@ -114,7 +114,7 @@ export function ModalUpdateAppointment({
   if (!employeesResult.isSuccess) {
     return <span>Loading...</span>;
   }
-  const today = new Date().toLocaleDateString("en-CA");
+  const today = new Date().toLocaleDateString("es-Mx");
 
   function closeError() {
     setErrorDialogue(false);

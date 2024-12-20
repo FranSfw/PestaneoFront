@@ -52,7 +52,7 @@ export function Dashboard() {
           {/* Sección de bienvenida y ModalInsert */}
           <div className="flex relative flex-col justify-start bg-white rounded-lg row-span-2 col-span-2 w-full h-full pb-2">
             <div className="relative pt-6">
-              <ModalInsert closeModal={closeModal} />
+              <ModalInsert  />
             </div>
             <span className="ml-5 mt-5 text-2xl">
               Ultimos Clientes Agregados
@@ -67,13 +67,13 @@ export function Dashboard() {
           {/* Sección de próximas citas */}
           <div className="bg-white rounded-lg col-span-2 row-span-3 w-full h-full flex flex-col justify-around">
             <div className="flex relative justify-between">
-              <ModalInsertCita closeModal={closeModal} />
+              <ModalInsertCita  />
               {isModalOpen && (
                 <div
                   className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center"
                   onClick={handleOutsideClick}
                 >
-                  <ModalInsertCita closeModal={closeModal} />
+                  <ModalInsertCita  />
                 </div>
               )}
               <h1 className="text-2xl m-3">Próximas Citas</h1>

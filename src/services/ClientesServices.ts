@@ -129,13 +129,15 @@ export async function clienteAgregar(create: clienteCreate) {
 }
 
 export async function deleteCliente(id: number) {
-  const response = await fetch(`${API_URL}/users/delete/${id}`, {
+  console.log("id to delete: ", id);
+  const response = await fetch(`${API_URL}/clientes/delete/${id}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
     },
   });
   const responsedata = await response.json();
+  console.log("response: ", responsedata);
   return responsedata;
 }
 
@@ -149,6 +151,40 @@ export async function searchCliente(search: string) {
       phone_number: search,
     }),
   });
+  const data = await response.json();
+  return data;
+}
+
+export async function updateCliente(update: Cliente) {
+  const response = await fetch(`${API_URL}/cliente/${update.cliente_id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      nombre: update.nombre,
+      apellido: update.apellido,
+      domicilio: update.domicilio,
+      telefono: update.telefono,
+      email: update.email,
+      fecha_nacimiento: update.fecha_nacimiento,
+      medicamentos: update.medicamentos,
+      alergias: update.alergias,
+      sensibilidad_productos: update.sensibilidad_productos,
+      dermatitis: update.dermatitis,
+      infeccion_ojos: update.infeccion_ojos,
+      dolencia_ojos: update.dolencia_ojos,
+      latex: update.latex,
+      foto: update.foto,
+      firma: update.firma,
+      fecha_ultimo_procedimiento: update.fecha_ultimo_procedimiento,
+      ultimo_procedimiento: update.ultimo_procedimiento,
+    }),
+  });
+  if (!response.ok) {
+    const data = await response.json();
+    throw new Error(data.message);
+  }
   const data = await response.json();
   return data;
 }

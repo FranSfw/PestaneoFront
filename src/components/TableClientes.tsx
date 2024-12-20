@@ -21,6 +21,9 @@ import { faTrash, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import { faEye } from "@fortawesome/free-solid-svg-icons/faEye";
 import { useDebounce } from "@uidotdev/usehooks";
+import { ModalUpdateCliente } from "./ModalUpdateCliente.tsx";
+import { ModalDeleteCliente } from "./ModalDeleteCliente.tsx";
+import { ModalView } from "./ModalView.tsx";
 
 export interface TableSearchProps {
   searchInput: string;
@@ -186,7 +189,7 @@ export function TablaClientes({ searchInput }: TableSearchProps) {
                   color: "text.primary",
                   width: "10%",
                 }}
-                align="justify"
+                align="center"
               >
                 Email
               </TableCell>
@@ -197,7 +200,7 @@ export function TablaClientes({ searchInput }: TableSearchProps) {
                   color: "text.primary",
                   width: "10%",
                 }}
-                align="justify"
+                align="center"
               >
                 Fecha de Ultimo Procedimiento
               </TableCell>
@@ -208,9 +211,9 @@ export function TablaClientes({ searchInput }: TableSearchProps) {
                   color: "text.primary",
                   width: "10%",
                 }}
-                align="left"
+                align="center"
               >
-                Último Procedimiento
+                Último <br></br>Procedimiento
               </TableCell>
 
               <TableCell
@@ -240,6 +243,7 @@ export function TablaClientes({ searchInput }: TableSearchProps) {
                       paddingBottom: "1.5rem",
                       paddingTop: "1.5rem",
                     }}
+                    align="justify"
                   >
                     {cliente.nombre} {cliente.apellido}
                   </TableCell>
@@ -250,9 +254,11 @@ export function TablaClientes({ searchInput }: TableSearchProps) {
                       paddingBottom: "1.5rem",
                       paddingTop: "1.5rem",
                     }}
+                    align="center"
                   >
                     {cliente.telefono}
                   </TableCell>
+                
                   <TableCell
                     sx={{
                       fontSize: "1.1rem",
@@ -260,16 +266,7 @@ export function TablaClientes({ searchInput }: TableSearchProps) {
                       paddingBottom: "1.5rem",
                       paddingTop: "1.5rem",
                     }}
-                  >
-                    {cliente.nombre} {cliente.apellido}
-                  </TableCell>
-                  <TableCell
-                    sx={{
-                      fontSize: "1.1rem",
-                      width: "10%",
-                      paddingBottom: "1.5rem",
-                      paddingTop: "1.5rem",
-                    }}
+                    align="center"
                   >
                     {cliente.email}
                   </TableCell>
@@ -280,6 +277,7 @@ export function TablaClientes({ searchInput }: TableSearchProps) {
                       paddingBottom: "1.5rem",
                       paddingTop: "1.5rem",
                     }}
+                    align="center"
                   >
                     {formatDate(cliente.fecha_ultimo_procedimiento)}
                   </TableCell>
@@ -303,7 +301,7 @@ export function TablaClientes({ searchInput }: TableSearchProps) {
                     }}
                   >
                     {" "}
-                    <div style={{ display: "flex", gap: "0.5rem" }}>
+                    <div style={{ display: "grid", gap: "0.5rem" }}>
                       {/* Editar */}
                       <Button
                         variant="contained"
@@ -362,18 +360,16 @@ export function TablaClientes({ searchInput }: TableSearchProps) {
           cliente={selectedCliente}
         />
       )}
-      {showUpdate && selectedAppointment && (
+      {showUpdate && selectedCliente && (
         <ModalUpdateCliente
           open={showUpdate}
           onClose={handleCloseUpdateModal}
           cliente={selectedCliente}
         />
       )}
-      {showView && selectedAppointment && (
-        <ModalViewCliente
-          open={showView}
-          onClose={handleViewClose}
-          cliente={selectedCliente}
+      {showView && selectedCliente && (
+        <ModalView
+        closeModal={handleCloseModal} type="next" id={selectedCliente.cliente_id ?? 0}
         />
       )}
     </>

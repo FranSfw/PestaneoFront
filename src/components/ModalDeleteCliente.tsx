@@ -6,35 +6,35 @@ import {
   DialogTitle,
   Button,
 } from "@mui/material";
-import { deleteCita } from "../services/CitasServices";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Cita } from "../services/CitasServices";
+import { Cliente, deleteCliente } from "../services/ClientesServices";
 
 interface ModalDeleteProps {
   open: boolean;
   onClose: () => void;
-  appointment: Cita;
+  cliente: Cliente;
 }
 
 export function ModalDeleteCliente({
   open,
   onClose,
-  appointment,
+  cliente,
 }: ModalDeleteProps) {
   const queryClient = useQueryClient();
 
   const deleteMutation = useMutation({
-    mutationFn: deleteCita,
+    mutationFn: deleteCliente,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["citasInfo"] });
+      queryClient.invalidateQueries({ queryKey: ["clienteInfo"] });
       onClose(); // Close modal after successful deletion
     },
   });
 
   const handleDeleteConfirm = () => {
-    if (appointment) {
-      console.log("appointment: ", appointment);
-      deleteMutation.mutate(appointment.cita_id);
+    if (cliente) {
+      console.log("cliente: ", cliente);
+      console.log("cliente.cliente_id: ", cliente.id);
+      deleteMutation.mutate(cliente.id);
     }
   };
 
@@ -43,8 +43,8 @@ export function ModalDeleteCliente({
       <DialogTitle>Confirm Delete</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Are you sure you want to delete the appointment for{" "}
-          {appointment?.cliente_nombre + " " + appointment?.cliente_apellido ||
+          Seguro que desea eliminar el cliente:{" "}
+          {cliente?.nombre + " " + cliente?.apellido ||
             "N/A"}
           ?
         </DialogContentText>
