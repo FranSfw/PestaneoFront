@@ -43,6 +43,8 @@ export function ClientSlider() {
             dolencia_ojos={cliente.dolencia_ojos}
             latex={cliente.latex}
             foto={cliente.foto}
+            // NO CAMBIAR ESTO
+            cliente_id = {cliente.id}
           />
         ))}
       </Slider>

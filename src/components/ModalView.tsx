@@ -34,6 +34,7 @@ export function ModalView({ open, onClose, type, id }: ModalInsertProps) {
 
   let cita;
   let clienteid = id;
+  console.log("clienteid:", clienteid);
 
   console.log("Cliente id:", clienteid);
 
@@ -73,7 +74,7 @@ export function ModalView({ open, onClose, type, id }: ModalInsertProps) {
           <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
             <div className="relative w-auto my-6 mx-auto max-w-3xl">
               {/* Content */}
-              <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full max-h-[85vh] min-w-[85vh] max-w-[80vh] bg-white outline-none focus:outline-none">
+              <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full max-h-[85vh] max-w-[85vh] bg-white outline-none focus:outline-none">
                 {/* Header */}
                 <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
                   <h3 className="text-3xl justify-center font-semibold">

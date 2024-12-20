@@ -2,11 +2,7 @@ import { Modal } from "@mui/material";
 import { useState, useEffect } from "react";
 import { Fields2 } from "./Fields2";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCheckCircle,
-  faTimesCircle,
-  faEye,
-} from "@fortawesome/free-solid-svg-icons";
+import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { getAllCitas, lastCita } from "../services/CitasServices";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { ModalView } from "../components/ModalView";
@@ -24,6 +20,7 @@ interface datosCajaClient {
   dolencia_ojos: boolean;
   latex: boolean;
   foto: string;
+  cliente_id: number;
 }
 
 //npm install --save signature_pad
@@ -40,6 +37,7 @@ export function CajaCita({
   dolencia_ojos,
   latex,
   foto,
+  cliente_id,
 }: datosCajaClient) {
   // Cambia a recibir directamente las propiedades
   return (
@@ -56,6 +54,7 @@ export function CajaCita({
       dolencia_ojos={dolencia_ojos}
       latex={latex}
       foto={foto}
+      cliente_id={cliente_id}
     />
   );
 }
@@ -73,47 +72,15 @@ const Cajita: React.FC<datosCajaClient> = ({
   dolencia_ojos,
   latex,
   foto,
+  cliente_id,
 }) => {
   // Recibe directamente las propiedades
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
-
   const [showLast, setShowLast] = useState(false);
   const [showNext, setShowNext] = useState(false);
   const [clienteid, setClienteId] = useState<number | null>(null);
-
-  const { data } = useQuery({
-    queryKey: ["citasInfo"],
-    queryFn: getAllCitas,
-  });
-
-  const citas = data?.citas || [];
-  const mutation = useMutation({ mutationFn: lastCita });
-
-  const cita = citas.length > 0 ? citas[0] : null;
-  let citaAnterior = null;
-  let cliente_id = cita?.cliente_id;
-
-  useEffect(() => {
-    if (cliente_id) {
-      mutation.mutate(cliente_id);
-    }
-  }, [cliente_id]);
-
-  if (mutation.data?.cita?.length > 0) {
-    citaAnterior = mutation.data.cita[0];
-  }
-
-  if (citas.length === 0) {
-    return (
-      <div className="container mx-auto p-8">
-        <h2 className="text-2xl font-bold text-gray-700 text-center">
-          No hay próximas citas registradas.
-        </h2>
-      </div>
-    );
-  }
 
   const dermatitisStr = dermatitis ? "Sí" : "No";
   const infeccion_ojosStr = infeccion_ojos ? "Sí" : "No";
@@ -132,7 +99,7 @@ const Cajita: React.FC<datosCajaClient> = ({
     alergias = "N/A";
   }
 
-  const handleShowLast = (appointment = clienteid) => {
+  const handleShowLast = (appointment = cliente_id) => {
     setShowLast(true);
     setClienteId(appointment);
   };
@@ -250,31 +217,36 @@ const Cajita: React.FC<datosCajaClient> = ({
                           Siguiente cita
                         </h2>
 
-                        <button
-                          className="px-4 bg-tertiaryYellow rounded-full w-32 h-12 flex items-center justify-center hover:bg-primaryBlack focus:bg-primaryBlack text-primaryBlack hover:text-tertiaryYellow focus:text-tertiaryYellow transition-all hover:duration-300 focus:duration-0"
-                          onClick={() => handleShowLast(cita?.cliente_id)}
-                        >
-                          <FontAwesomeIcon
-                            icon={faEye}
-                            className="mr-1 text-sm"
-                          />
-                          <span className="font-medium text-sm lg:text-base">
-                            Ver cita
-                          </span>
-                        </button>
+                        <div className="mt-2 flex justify-center relative pr-32">
+                          <button
+                            className="px-4 bg-tertiaryYellow rounded-full h-12 flex items-center justify-center hover:bg-primaryBlack focus:bg-primaryBlack text-primaryBlack hover:text-tertiaryYellow focus:text-tertiaryYellow transition-all hover:duration-300 focus:duration-0"
+                            onClick={() => handleShowLast(cliente_id)}
+                          >
+                            <FontAwesomeIcon
+                              icon={faEye}
+                              className="mr-1 text-sm"
+                            />
+                            <span className="font-medium text-sm lg:text-base">
+                              Ver cita
+                            </span>
+                          </button>
+                        </div>
 
-                        <button
-                          className="px-4 bg-tertiaryYellow rounded-full w-32 h-12 flex items-center justify-center hover:bg-primaryBlack focus:bg-primaryBlack text-primaryBlack hover:text-tertiaryYellow focus:text-tertiaryYellow transition-all hover:duration-300 focus:duration-0"
-                          onClick={() => handleShowNext(cita?.cliente_id)}
-                        >
-                          <FontAwesomeIcon
-                            icon={faEye}
-                            className="mr-1 text-sm"
-                          />
-                          <span className="font-medium text-sm lg:text-base">
-                            Ver cita
-                          </span>
-                        </button>
+                        <div className="mt-2 flex justify-center relative pr-32">
+                          {" "}
+                          <button
+                            className="px-4 bg-tertiaryYellow rounded-full h-12 flex items-center justify-center hover:bg-primaryBlack focus:bg-primaryBlack text-primaryBlack hover:text-tertiaryYellow focus:text-tertiaryYellow transition-all hover:duration-300 focus:duration-0"
+                            onClick={() => handleShowNext(cliente_id)}
+                          >
+                            <FontAwesomeIcon
+                              icon={faEye}
+                              className="mr-1 text-sm"
+                            />
+                            <span className="font-medium text-sm lg:text-base">
+                              Ver cita
+                            </span>
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
