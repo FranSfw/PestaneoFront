@@ -28,25 +28,28 @@ export function ClientSlider() {
   return (
     <div className="slider-container">
       <Slider {...settings}>
-        {data.clientes.map((cliente, index) => (
-          <CajaCita
-            key={index}
-            nombre={cliente.nombre}
-            apellido={cliente.apellido}
-            telefono={cliente.telefono}
-            email={cliente.email}
-            medicamentos={cliente.medicamentos}
-            alergias={cliente.alergias}
-            sensibilidad_productos={cliente.sensibilidad_productos}
-            dermatitis={cliente.dermatitis}
-            infeccion_ojos={cliente.infeccion_ojos}
-            dolencia_ojos={cliente.dolencia_ojos}
-            latex={cliente.latex}
-            foto={cliente.foto}
-            // NO CAMBIAR ESTO
-            cliente_id = {cliente.id}
-          />
-        ))}
+        {data.clientes
+          .slice()
+          .reverse()
+          .map((cliente, index) => (
+            <CajaCita
+              key={index}
+              nombre={cliente.nombre}
+              apellido={cliente.apellido}
+              telefono={cliente.telefono}
+              email={cliente.email}
+              medicamentos={cliente.medicamentos}
+              alergias={cliente.alergias}
+              sensibilidad_productos={cliente.sensibilidad_productos}
+              dermatitis={cliente.dermatitis}
+              infeccion_ojos={cliente.infeccion_ojos}
+              dolencia_ojos={cliente.dolencia_ojos}
+              latex={cliente.latex}
+              foto={cliente.foto}
+              // NO CAMBIAR ESTO
+              cliente_id={cliente.id}
+            />
+          ))}
       </Slider>
     </div>
   );
