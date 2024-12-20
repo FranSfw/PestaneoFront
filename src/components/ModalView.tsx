@@ -77,7 +77,7 @@ export function ModalView({ open, onClose, type, id }: ModalInsertProps) {
                 {/* Header */}
                 <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
                   <h3 className="text-3xl justify-center font-semibold">
-                    Detalles del Cliente
+                    Detalles de la cita
                   </h3>
                   <button
                     className="p-1 ml-auto bg-transparent border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"

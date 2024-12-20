@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCheckCircle,
   faTimesCircle,
+  faEye,
 } from "@fortawesome/free-solid-svg-icons";
 import { getAllCitas, lastCita } from "../services/CitasServices";
 import { useQuery, useMutation } from "@tanstack/react-query";
@@ -78,11 +79,9 @@ const Cajita: React.FC<datosCajaClient> = ({
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.target === e.currentTarget) {
-      closeModal();
-    }
-  };
+  const [showLast, setShowLast] = useState(false);
+  const [showNext, setShowNext] = useState(false);
+  const [clienteid, setClienteId] = useState<number | null>(null);
 
   const { data } = useQuery({
     queryKey: ["citasInfo"],
@@ -94,13 +93,13 @@ const Cajita: React.FC<datosCajaClient> = ({
 
   const cita = citas.length > 0 ? citas[0] : null;
   let citaAnterior = null;
-  let clienteid = cita?.cliente_id;
+  let cliente_id = cita?.cliente_id;
 
   useEffect(() => {
-    if (clienteid) {
-      mutation.mutate(clienteid);
+    if (cliente_id) {
+      mutation.mutate(cliente_id);
     }
-  }, [clienteid]);
+  }, [cliente_id]);
 
   if (mutation.data?.cita?.length > 0) {
     citaAnterior = mutation.data.cita[0];
@@ -132,6 +131,24 @@ const Cajita: React.FC<datosCajaClient> = ({
   if (alergias === "") {
     alergias = "N/A";
   }
+
+  const handleShowLast = (appointment = clienteid) => {
+    setShowLast(true);
+    setClienteId(appointment);
+  };
+
+  const handleShowNext = (appointment = clienteid) => {
+    setShowNext(true);
+    setClienteId(appointment);
+  };
+
+  const handleClosLast = () => {
+    setShowLast(false);
+  };
+
+  const handleClosNext = () => {
+    setShowNext(false);
+  };
 
   return (
     <>
@@ -233,21 +250,31 @@ const Cajita: React.FC<datosCajaClient> = ({
                           Siguiente cita
                         </h2>
 
-                        <div className="mt-2 flex justify-center relative pr-32">
-                          <ModalView
-                            closeModal={closeModal}
-                            type="last"
-                            id={clienteid ?? 0}
+                        <button
+                          className="px-4 bg-tertiaryYellow rounded-full w-32 h-12 flex items-center justify-center hover:bg-primaryBlack focus:bg-primaryBlack text-primaryBlack hover:text-tertiaryYellow focus:text-tertiaryYellow transition-all hover:duration-300 focus:duration-0"
+                          onClick={() => handleShowLast(cita?.cliente_id)}
+                        >
+                          <FontAwesomeIcon
+                            icon={faEye}
+                            className="mr-1 text-sm"
                           />
-                        </div>
+                          <span className="font-medium text-sm lg:text-base">
+                            Ver cita
+                          </span>
+                        </button>
 
-                        <div className="mt-2 flex justify-center relative pr-32">
-                          <ModalView
-                            closeModal={closeModal}
-                            type="next"
-                            id={clienteid ?? 0}
+                        <button
+                          className="px-4 bg-tertiaryYellow rounded-full w-32 h-12 flex items-center justify-center hover:bg-primaryBlack focus:bg-primaryBlack text-primaryBlack hover:text-tertiaryYellow focus:text-tertiaryYellow transition-all hover:duration-300 focus:duration-0"
+                          onClick={() => handleShowNext(cita?.cliente_id)}
+                        >
+                          <FontAwesomeIcon
+                            icon={faEye}
+                            className="mr-1 text-sm"
                           />
-                        </div>
+                          <span className="font-medium text-sm lg:text-base">
+                            Ver cita
+                          </span>
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -267,6 +294,23 @@ const Cajita: React.FC<datosCajaClient> = ({
             </div>
             <div className="opacity-50 fixed inset-0 z-40 bg-black"></div>
           </>
+          {showNext && clienteid && (
+            <ModalView
+              open={showNext}
+              onClose={handleClosNext}
+              id={clienteid}
+              type="next"
+            />
+          )}
+
+          {showLast && clienteid && (
+            <ModalView
+              open={showLast}
+              onClose={handleClosLast}
+              id={clienteid}
+              type="last"
+            />
+          )}
         </div>
       </Modal>
     </>
