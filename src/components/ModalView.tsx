@@ -1,23 +1,17 @@
-import { useEffect, useState } from "react";
-import { IconButton } from "../components/IconButton";
-import { faEye } from "@fortawesome/free-solid-svg-icons";
+import { useEffect } from "react";
 import { Fields2 } from "../components/Fields2";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Cita, getAllCitas } from "../services/CitasServices";
 import { lastCita } from "../services/CitasServices";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface ModalInsertProps {
-  closeModal: () => void;
-
+  open: boolean;
+  onClose: () => void;
   type: "next" | "last" | string;
   id: number;
 }
 
-export function ModalView({ type, id }: ModalInsertProps) {
-  const [showModal, setShowModal] = useState(
-    type !== "next" && type !== "last"
-  );
+export function ModalView({ open, onClose, type, id }: ModalInsertProps) {
   const { data } = useQuery({ queryKey: ["citasInfo"], queryFn: getAllCitas });
   const mutation = useMutation({ mutationFn: lastCita });
 
@@ -50,14 +44,6 @@ export function ModalView({ type, id }: ModalInsertProps) {
     }
   }, [clienteid]);
 
-  if (mutation.isLoading) {
-    console.log("Cargando la última cita...");
-  }
-
-  if (mutation.error) {
-    console.error("Ocurrió un error al cargar la última cita", mutation.error);
-  }
-
   if (type === "next") {
     // buscar la cita siguiente del cliente con id
     cita = citas.find((cita: Cita) => cita.cliente_id === id);
@@ -65,33 +51,24 @@ export function ModalView({ type, id }: ModalInsertProps) {
   }
 
   if (type === "last") {
-    if (mutation.data && mutation.data.cita && mutation.data.cita.length > 0) {
+    if (!mutation.data) {
+      // No renderizar nada hasta que se obtengan los datos
+      return null;
+    }
+
+    if (mutation.data.cita && mutation.data.cita.length > 0) {
       const citaAnterior = mutation.data.cita[0];
       cita = citaAnterior;
+    } else {
+      console.log("No hay citas anteriores");
+      return <p>No hay citas anteriores</p>;
     }
   }
 
   return (
     <>
-      {/* Mostrar botón solo si es "next" o "last" */}
-      {(type === "next" || type === "last") && (
-        <button
-
-          className="group flex absolute px-4 bg-tertiaryYellow rounded-full h-12 items-center justify-center hover:bg-primaryBlack focus:bg-primaryBlack text-primaryBlack hover:text-tertiaryYellow focus:text-tertiaryYellow transition-all hover:duration-300 focus:duration-0"
-          onClick={() => setShowModal(true)}
-        >
-          <div>
-            <FontAwesomeIcon icon={faEye} className="" />
-          </div>
-
-          <div>
-            <p className="my-2 pl-2 text-xl font-medium">Ver cita</p>
-          </div>
-        </button>
-      )}
-
       {/* Mostrar modal directamente o bajo demanda */}
-      {showModal && cita ? (
+      {open && (
         <>
           <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
             <div className="relative w-auto my-6 mx-auto max-w-3xl">
@@ -104,7 +81,7 @@ export function ModalView({ type, id }: ModalInsertProps) {
                   </h3>
                   <button
                     className="p-1 ml-auto bg-transparent border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
-                    onClick={() => setShowModal(false)}
+                    onClick={onClose}
                   >
                     ×
                   </button>
@@ -172,7 +149,7 @@ export function ModalView({ type, id }: ModalInsertProps) {
                   <button
                     className="background-transparent text-red-500 hover:bg-red-500 hover:text-white font-bold uppercase px-6 py-3 text-sm rounded transition-all"
                     type="button"
-                    onClick={() => setShowModal(false)}
+                    onClick={onClose}
                   >
                     Cerrar
                   </button>
@@ -182,7 +159,7 @@ export function ModalView({ type, id }: ModalInsertProps) {
           </div>
           <div className="opacity-50 fixed inset-0 z-40 bg-black"></div>
         </>
-      ) : null}
+      )}
     </>
   );
 }
