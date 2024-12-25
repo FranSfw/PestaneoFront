@@ -65,7 +65,7 @@ export function TablaClientes({ searchInput }: TableSearchProps) {
   }, [debouncedSearchTerm]);
 
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(3);
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -258,7 +258,7 @@ export function TablaClientes({ searchInput }: TableSearchProps) {
                   >
                     {cliente.telefono}
                   </TableCell>
-                
+
                   <TableCell
                     sx={{
                       fontSize: "1.1rem",
@@ -342,7 +342,7 @@ export function TablaClientes({ searchInput }: TableSearchProps) {
           </TableBody>
         </Table>
         <TablePagination
-          rowsPerPageOptions={[5, 10, 15]}
+          rowsPerPageOptions={[3, 4, 5]}
           component="div"
           count={data.clientes.length}
           rowsPerPage={rowsPerPage}
@@ -369,7 +369,9 @@ export function TablaClientes({ searchInput }: TableSearchProps) {
       )}
       {showView && selectedCliente && (
         <ModalView
-        closeModal={handleCloseModal} type="next" id={selectedCliente.cliente_id ?? 0}
+          closeModal={handleCloseModal}
+          type="next"
+          id={selectedCliente.cliente_id ?? 0}
         />
       )}
     </>
